@@ -62,6 +62,7 @@ td {
     height: 40px; /* Equal width and height for each cell */
     text-align: center;
     vertical-align: middle;
+    box-sizing: border-box;
 }
 
 input {
