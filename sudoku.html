@@ -1,0 +1,31 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Game</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Ensure this CSS file exists -->
+</head>
+<body>
+    <h1>Sudoku Game</h1>
+    <div id="sudoku-board">
+        <table>
+            <tbody>
+                <!-- Generate 9 rows and 9 columns for Sudoku -->
+                <script>
+                    for (let i = 0; i < 9; i++) {
+                        document.write("<tr>");
+                        for (let j = 0; j < 9; j++) {
+                            document.write('<td><input type="text" maxlength="1"></td>');
+                        }
+                        document.write("</tr>");
+                    }
+                </script>
+            </tbody>
+        </table>
+    </div>
+    <button onclick="generatePuzzle()">Generate Puzzle</button>
+    <button onclick="checkSolution()">Check Solution</button>
+
+    <script src="script.js"></script> <!-- Ensure this JavaScript file exists -->
+</body>
+</html>
