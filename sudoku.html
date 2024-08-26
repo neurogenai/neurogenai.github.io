@@ -1,9 +1,10 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sudoku Game</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Ensure this CSS file exists -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Sudoku Game</h1>
@@ -25,10 +26,132 @@
     </div>
     <button onclick="generatePuzzle()">Generate Puzzle</button>
     <button onclick="checkSolution()">Check Solution</button>
-  
+    
     <!-- Back Button to Main Page -->
     <button onclick="window.location.href='index.html';">Back to Main Page</button>
-    
-    <script src="script.js"></script> <!-- Ensure this JavaScript file exists -->
+
+    <script>
+        // Utility function to check if a number can be placed in a given cell
+        function isSafe(board, row, col, num) {
+            for (let x = 0; x < 9; x++) {
+                if (board[row][x] == num || board[x][col] == num ||
+                    board[3 * Math.floor(row / 3) + Math.floor(x / 3)][3 * Math.floor(col / 3) + x % 3] == num) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Function to solve the board using backtracking
+        function solveSudoku(board) {
+            for (let row = 0; row < 9; row++) {
+                for (let col = 0; col < 9; col++) {
+                    if (board[row][col] == '') {
+                        for (let num = 1; num <= 9; num++) {
+                            if (isSafe(board, row, col, num)) {
+                                board[row][col] = num;
+                                if (solveSudoku(board)) {
+                                    return true;
+                                } else {
+                                    board[row][col] = '';
+                                }
+                            }
+                        }
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        // Function to remove numbers from a fully filled board to create a puzzle
+        function createPuzzle(board, numRemove) {
+            let count = numRemove;
+            while (count !== 0) {
+                let cellId = Math.floor(Math.random() * 81);
+                let row = Math.floor(cellId / 9);
+                let col = cellId % 9;
+                if (board[row][col] !== '') {
+                    board[row][col] = '';
+                    count--;
+                }
+            }
+        }
+
+        // Function to generate a complete valid Sudoku board
+        function generateFullBoard() {
+            let board = Array.from(Array(9), () => Array(9).fill(''));
+            solveSudoku(board);
+            return board;
+        }
+
+        // Function to generate a new random puzzle
+        function generatePuzzle() {
+            let board = generateFullBoard();
+            createPuzzle(board, 40);  // Remove 40 cells to create a puzzle
+
+            let inputs = document.querySelectorAll('td input');
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    inputs[i * 9 + j].value = board[i][j];
+                    if (board[i][j] !== '') {
+                        inputs[i * 9 + j].setAttribute('readonly', true);
+                    } else {
+                        inputs[i * 9 + j].removeAttribute('readonly');
+                    }
+                }
+            }
+        }
+
+        // Function to check the solution provided by the user
+        function checkSolution() {
+            let inputs = document.querySelectorAll('td input');
+            let board = [];
+
+            for (let i = 0; i < 9; i++) {
+                board[i] = [];
+                for (let j = 0; j < 9; j++) {
+                    board[i][j] = inputs[i * 9 + j].value;
+                }
+            }
+
+            if (validateSudoku(board)) {
+                alert("Congratulations! You solved the Sudoku!");
+            } else {
+                alert("The solution is incorrect. Please try again.");
+            }
+        }
+
+        // Function to validate the entire Sudoku board
+        function validateSudoku(board) {
+            for (let i = 0; i < 9; i++) {
+                let rowSet = new Set();
+                let colSet = new Set();
+                let gridSet = new Set();
+
+                for (let j = 0; j < 9; j++) {
+                    let rowValue = board[i][j];
+                    let colValue = board[j][i];
+                    let gridValue = board[3 * Math.floor(i / 3) + Math.floor(j / 3)][3 * (i % 3) + (j % 3)];
+
+                    if (rowValue) {
+                        if (rowSet.has(rowValue)) return false;
+                        rowSet.add(rowValue);
+                    }
+
+                    if (colValue) {
+                        if (colSet.has(colValue)) return false;
+                        colSet.add(colValue);
+                    }
+
+                    if (gridValue) {
+                        if (gridSet.has(gridValue)) return false;
+                        gridSet.add(gridValue);
+                    }
+                }
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>
