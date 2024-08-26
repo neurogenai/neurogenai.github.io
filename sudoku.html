@@ -5,6 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sudoku Game</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        #sudoku-board {
+            margin: 20px auto;
+            width: 360px; /* Ensures the board stays square */
+            height: 360px; /* Ensures the board stays square */
+            border: 2px solid #000;
+        }
+
+        table {
+            width: 100%;
+            height: 100%;
+            border-collapse: collapse;
+        }
+
+        td {
+            border: 1px solid #000;
+            width: 40px; /* Equal width and height for each cell */
+            height: 40px; /* Equal width and height for each cell */
+            text-align: center;
+            vertical-align: middle;
+            box-sizing: border-box; /* Ensures border is included in the width/height */
+        }
+
+        input {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            border: none;
+            font-size: 20px;
+            outline: none;
+            background-color: transparent;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 15px 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
     <h1>Sudoku Game</h1>
@@ -103,74 +159,72 @@
             }
         }
 
-function checkSolution() {
-    let inputs = document.querySelectorAll('td input');
-    let board = [];
+        // Function to check the solution provided by the user
+        function checkSolution() {
+            let inputs = document.querySelectorAll('td input');
+            let board = [];
 
-    for (let i = 0; i < 9; i++) {
-        board[i] = [];
-        for (let j = 0; j < 9; j++) {
-            let value = inputs[i * 9 + j].value;
-            if (value === '' || isNaN(value)) {
-                alert("Please fill in all the cells with numbers before checking the solution.");
-                return;
-            }
-            board[i][j] = parseInt(value, 10); // Convert string to number for validation
-        }
-    }
-
-    if (validateSudoku(board)) {
-        alert("Congratulations! You solved the Sudoku!");
-    } else {
-        alert("The solution is incorrect. Please try again.");
-    }
-}
-
-    if (validateSudoku(board)) {
-        alert("Congratulations! You solved the Sudoku!");
-    } else {
-        alert("The solution is incorrect. Please try again.");
-    }
-}
-  function validateSudoku(board) {
-    // Validate rows and columns
-    for (let i = 0; i < 9; i++) {
-        let rowSet = new Set();
-        let colSet = new Set();
-
-        for (let j = 0; j < 9; j++) {
-            // Validate rows
-            if (board[i][j] !== '' && (board[i][j] < 1 || board[i][j] > 9 || rowSet.has(board[i][j]))) {
-                return false;
-            }
-            rowSet.add(board[i][j]);
-
-            // Validate columns
-            if (board[j][i] !== '' && (board[j][i] < 1 || board[j][i] > 9 || colSet.has(board[j][i]))) {
-                return false;
-            }
-            colSet.add(board[j][i]);
-        }
-    }
-
-    // Validate 3x3 subgrids
-    for (let row = 0; row < 9; row += 3) {
-        for (let col = 0; col < 9; col += 3) {
-            let gridSet = new Set();
-            for (let i = 0; i < 3; i++) {
-                for (let j = 0; j < 3; j++) {
-                    let value = board[row + i][col + j];
-                    if (value !== '' && (value < 1 || value > 9 || gridSet.has(value))) {
-                        return false;
+            for (let i = 0; i < 9; i++) {
+                board[i] = [];
+                for (let j = 0; j < 9; j++) {
+                    let value = inputs[i * 9 + j].value;
+                    if (value === '' || isNaN(value)) {
+                        alert("Please fill in all the cells with numbers before checking the solution.");
+                        return;
                     }
-                    gridSet.add(value);
+                    board[i][j] = parseInt(value, 10); // Convert string to number for validation
                 }
             }
-        }
-    }
 
-    return true;
-}
+            if (validateSudoku(board)) {
+                alert("Congratulations! You solved the Sudoku!");
+            } else {
+                alert("The solution is incorrect. Please try again.");
+            }
+        }
+
+        // Function to validate the entire Sudoku board
+        function validateSudoku(board) {
+            // Validate rows and columns
+            for (let i = 0; i < 9; i++) {
+                let rowSet = new Set();
+                let colSet = new Set();
+
+                for (let j = 0; j < 9; j++) {
+                    // Validate rows
+                    if (board[i][j] !== '') {
+                        if (rowSet.has(board[i][j])) return false;
+                        rowSet.add(board[i][j]);
+                    }
+
+                    // Validate columns
+                    if (board[j][i] !== '') {
+                        if (colSet.has(board[j][i])) return false;
+                        colSet.add(board[j][i]);
+                    }
+                }
+            }
+
+            // Validate 3x3 subgrids
+            for (let row = 0; row < 9; row += 3) {
+                for (let col = 0; col < 9; col += 3) {
+                    let gridSet = new Set();
+                    for (let i = 0; i < 3; i++) {
+                        for (let j = 0; j < 3; j++) {
+                            let value = board[row + i][col + j];
+                            if (value !== '') {
+                                if (gridSet.has(value)) return false;
+                                gridSet.add(value);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        // Auto-generate a new puzzle when the page loads
         window.onload = function() {
             generatePuzzle();
         };
