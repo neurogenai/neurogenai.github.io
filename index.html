@@ -3,31 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sudoku Game</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Main Page - Game Hub</title>
+    <link rel="stylesheet" href="main-styles.css"> <!-- Link to a new CSS file -->
 </head>
 <body>
-    <h1>Sudoku Game</h1>
-    <div id="sudoku-board">
-        <!-- 9x9 Grid for Sudoku -->
-        <table>
-            <tbody>
-                <!-- Generate 9 rows and 9 columns for Sudoku -->
-                <script>
-                    for (let i = 0; i < 9; i++) {
-                        document.write("<tr>");
-                        for (let j = 0; j < 9; j++) {
-                            document.write('<td><input type="text" maxlength="1"></td>');
-                        }
-                        document.write("</tr>");
-                    }
-                </script>
-            </tbody>
-        </table>
-    </div>
-    <button onclick="generatePuzzle()">Generate Puzzle</button>
-    <button onclick="checkSolution()">Check Solution</button>
+    <header>
+        <h1>Welcome to the Game Hub!</h1>
+        <p>Explore a variety of fun and interactive games. Click a button below to start playing!</p>
+    </header>
 
-    <script src="script.js"></script>
+    <main>
+        <button onclick="window.location.href='sudoku.html';">Play Sudoku</button>
+        <!-- Add more buttons for other games here -->
+    </main>
+
+    <footer>
+        <p>© 2024 Game Hub. All rights reserved.</p>
+    </footer>
 </body>
 </html>
