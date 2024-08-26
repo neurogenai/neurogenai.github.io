@@ -103,19 +103,19 @@
             }
         }
 
-     function checkSolution() {
+function checkSolution() {
     let inputs = document.querySelectorAll('td input');
     let board = [];
 
     for (let i = 0; i < 9; i++) {
         board[i] = [];
         for (let j = 0; j < 9; j++) {
-            board[i][j] = inputs[i * 9 + j].value;
-            // Check if any cell is empty
-            if (board[i][j] === '') {
-                alert("Please fill in all the cells before checking the solution.");
+            let value = inputs[i * 9 + j].value;
+            if (value === '' || isNaN(value)) {
+                alert("Please fill in all the cells with numbers before checking the solution.");
                 return;
             }
+            board[i][j] = parseInt(value, 10); // Convert string to number for validation
         }
     }
 
@@ -125,36 +125,52 @@
         alert("The solution is incorrect. Please try again.");
     }
 }
-        // Function to validate the entire Sudoku board
-        function validateSudoku(board) {
-            for (let i = 0; i < 9; i++) {
-                let rowSet = new Set();
-                let colSet = new Set();
-                let gridSet = new Set();
 
-                for (let j = 0; j < 9; j++) {
-                    let rowValue = board[i][j];
-                    let colValue = board[j][i];
-                    let gridValue = board[3 * Math.floor(i / 3) + Math.floor(j / 3)][3 * (i % 3) + (j % 3)];
+    if (validateSudoku(board)) {
+        alert("Congratulations! You solved the Sudoku!");
+    } else {
+        alert("The solution is incorrect. Please try again.");
+    }
+}
+  function validateSudoku(board) {
+    // Validate rows and columns
+    for (let i = 0; i < 9; i++) {
+        let rowSet = new Set();
+        let colSet = new Set();
 
-                    if (rowValue) {
-                        if (rowSet.has(rowValue)) return false;
-                        rowSet.add(rowValue);
+        for (let j = 0; j < 9; j++) {
+            // Validate rows
+            if (board[i][j] !== '' && (board[i][j] < 1 || board[i][j] > 9 || rowSet.has(board[i][j]))) {
+                return false;
+            }
+            rowSet.add(board[i][j]);
+
+            // Validate columns
+            if (board[j][i] !== '' && (board[j][i] < 1 || board[j][i] > 9 || colSet.has(board[j][i]))) {
+                return false;
+            }
+            colSet.add(board[j][i]);
+        }
+    }
+
+    // Validate 3x3 subgrids
+    for (let row = 0; row < 9; row += 3) {
+        for (let col = 0; col < 9; col += 3) {
+            let gridSet = new Set();
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    let value = board[row + i][col + j];
+                    if (value !== '' && (value < 1 || value > 9 || gridSet.has(value))) {
+                        return false;
                     }
-
-                    if (colValue) {
-                        if (colSet.has(colValue)) return false;
-                        colSet.add(colValue);
-                    }
-
-                    if (gridValue) {
-                        if (gridSet.has(gridValue)) return false;
-                        gridSet.add(gridValue);
-                    }
+                    gridSet.add(value);
                 }
             }
-            return true;
         }
+    }
+
+    return true;
+}
         window.onload = function() {
             generatePuzzle();
         };
