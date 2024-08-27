@@ -1,25 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crossword Game</title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
         #crossword-board {
             margin: 20px auto;
             display: grid;
-            grid-template-columns: repeat(10, 40px); /* 10 columns for the crossword */
-            grid-template-rows: repeat(10, 40px); /* 10 rows for the crossword */
+            grid-template-columns: repeat(10, 40px);
+            grid-template-rows: repeat(10, 40px);
             gap: 2px;
-            width: 420px; /* width to accommodate 10 cells plus gaps */
+            width: 420px;
+            border: 2px solid #000;
+            background-color: #fff;
         }
 
         .cell {
             width: 40px;
             height: 40px;
             text-align: center;
-            vertical-align: middle;
             font-size: 18px;
             border: 1px solid #000;
             box-sizing: border-box;
@@ -27,6 +37,8 @@
         }
 
         .black-cell {
+            width: 40px;
+            height: 40px;
             background-color: #000;
         }
 
@@ -39,27 +51,193 @@
             outline: none;
             background-color: transparent;
         }
+
+        .clues {
+            text-align: left;
+            margin: 20px auto;
+            width: 300px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 15px 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
+
 <body>
     <h1>Crossword Game</h1>
     <div id="crossword-board">
-        <!-- Define your crossword grid here with input fields -->
+        <!-- Define a more complex 10x10 crossword grid -->
         <div class="cell"><input type="text" maxlength="1"></div>
         <div class="cell"><input type="text" maxlength="1"></div>
         <div class="cell"><input type="text" maxlength="1"></div>
         <div class="black-cell"></div>
         <div class="cell"><input type="text" maxlength="1"></div>
-        <!-- Repeat for a 10x10 grid -->
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+
+        <div class="black-cell"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
     </div>
+
+    <!-- Clues for the crossword -->
+    <div class="clues">
+        <h2>Clues</h2>
+        <h3>Across</h3>
+        <p>1. A type of tree (3 letters)</p>
+        <p>4. Opposite of fast (4 letters)</p>
+        <h3>Down</h3>
+        <p>1. A fruit (4 letters)</p>
+        <p>2. Opposite of night (3 letters)</p>
+    </div>
+
     <button onclick="checkCrossword()">Check Solution</button>
     <button onclick="window.location.href='index.html';">Back to Main Page</button>
 
     <script>
         function checkCrossword() {
-            // Logic to check crossword solution
-            alert('Crossword solution checked!'); // Placeholder logic
+            // Add logic to check the crossword solution
+            const correctAnswers = [
+                ['A', 'S', 'H', null, 'S', 'L', null, 'A', 'N', 'D'],
+                ['P', null, 'E', 'A', null, 'O', null, 'L', null, 'T'],
+                ['P', null, 'N', 'S', null, 'W', null, 'O', null, 'E'],
+                [null, null, 'S', null, 'L', null, 'M', null, 'O', null],
+                ['T', null, 'N', 'T', 'I', 'M', null, 'E', null, 'O'],
+                ['R', null, 'G', null, 'G', null, 'T', null, 'P', null],
+                ['E', null, 'L', null, 'L', null, 'E', null, 'E', 'L'],
+                ['E', null, 'O', null, 'O', null, 'R', 'E', null, 'E'],
+                ['L', 'E', 'A', null, 'S', 'E', null, 'E', 'E', 'S'],
+                ['O', null, null, 'S', 'T', 'E', 'A', null, 'S', 'T'],
+            ];
+
+            let isCorrect = true;
+            const cells = document.querySelectorAll('#crossword-board .cell input');
+
+            cells.forEach((cell, index) => {
+                const row = Math.floor(index / 10);
+                const col = index % 10;
+                if (cell.value.toUpperCase() !== (correctAnswers[row][col] || '')) {
+                    isCorrect = false;
+                }
+            });
+
+            if (isCorrect) {
+                alert('Congratulations! You solved the crossword!');
+            } else {
+                alert('Some answers are incorrect. Please try again.');
+            }
         }
     </script>
 </body>
+
 </html>
