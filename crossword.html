@@ -15,12 +15,18 @@
             background-color: #f0f0f0;
         }
 
+        #crossword-board-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
         #crossword-board {
-            margin: 20px auto;
             display: grid;
             gap: 2px;
             border: 2px solid #000;
             background-color: #fff;
+            margin: auto;
         }
 
         .cell {
@@ -74,7 +80,10 @@
 
 <body>
     <h1>Crossword Game</h1>
-    <div id="crossword-board"></div>
+    
+    <div id="crossword-board-container">
+        <div id="crossword-board"></div>
+    </div>
 
     <!-- Clues for the crossword -->
     <div class="clues">
@@ -119,9 +128,9 @@
             let startCol = Math.floor((grid[0].length - wordList[0].word.length) / 2);
             placeWord(wordList[0].word, startRow, startCol, 'horizontal');
 
-            // Place the rest of the words
+            // Place the rest of the words ensuring they connect properly
             for (let i = 1; i < wordList.length; i++) {
-                placeWordRandomly(wordList[i].word);
+                placeWordConnected(wordList[i].word);
             }
 
             renderGrid();
@@ -139,48 +148,42 @@
             placedWords.push({ word, row, col, direction });
         }
 
-        function placeWordRandomly(word) {
-            let attempts = 0;
+        function placeWordConnected(word) {
             let placed = false;
-            while (!placed && attempts < 100) {
-                let direction = Math.random() > 0.5 ? 'horizontal' : 'vertical';
-                let row = Math.floor(Math.random() * grid.length);
-                let col = Math.floor(Math.random() * grid[0].length);
-
-                if (canPlaceWord(word, row, col, direction)) {
-                    placeWord(word, row, col, direction);
-                    placed = true;
+            for (let attempt = 0; attempt < 100 && !placed; attempt++) {
+                for (let r = 0; r < grid.length; r++) {
+                    for (let c = 0; c < grid[r].length; c++) {
+                        if (grid[r][c] !== ' ') {
+                            const letter = grid[r][c];
+                            for (let i = 0; i < word.length; i++) {
+                                if (word[i] === letter) {
+                                    if (canPlaceWord(word, r - i, c, 'vertical')) {
+                                        placeWord(word, r - i, c, 'vertical');
+                                        placed = true;
+                                    } else if (canPlaceWord(word, r, c - i, 'horizontal')) {
+                                        placeWord(word, r, c - i, 'horizontal');
+                                        placed = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                attempts++;
             }
         }
 
         function canPlaceWord(word, row, col, direction) {
             if (direction === 'horizontal') {
-                if (col + word.length > grid[0].length) return false;
+                if (col < 0 || col + word.length > grid[0].length) return false;
                 for (let i = 0; i < word.length; i++) {
                     if (grid[row][col + i] !== ' ' && grid[row][col + i] !== word[i]) return false;
                 }
             } else {
-                if (row + word.length > grid.length) return false;
+                if (row < 0 || row + word.length > grid.length) return false;
                 for (let i = 0; i < word.length; i++) {
                     if (grid[row + i][col] !== ' ' && grid[row + i][col] !== word[i]) return false;
                 }
             }
-
-            // Check for connecting words
-            for (let i = 0; i < word.length; i++) {
-                if (direction === 'horizontal') {
-                    if ((col + i > 0 && grid[row][col + i - 1] !== ' ' && i === 0) || (col + i < grid[0].length - 1 && grid[row][col + i + 1] !== ' ' && i === word.length - 1)) {
-                        return false;
-                    }
-                } else {
-                    if ((row + i > 0 && grid[row + i - 1][col] !== ' ' && i === 0) || (row + i < grid.length - 1 && grid[row + i + 1][col] !== ' ' && i === word.length - 1)) {
-                        return false;
-                    }
-                }
-            }
-
             return true;
         }
 
