@@ -108,57 +108,77 @@
 
         function generateCrossword() {
             // Clear grid and placed words
-            grid = [];
+            grid = Array(15).fill(null).map(() => Array(15).fill(' '));
             placedWords = [];
             document.getElementById('crossword-board').innerHTML = '';
             document.getElementById('across-clues').innerHTML = '';
             document.getElementById('down-clues').innerHTML = '';
 
-            // Set initial grid dimensions (minimum size based on words)
-            const gridSize = 15;
-            grid = Array(gridSize).fill(null).map(() => Array(gridSize).fill(' '));
+            // Place the first word in the center
+            let startRow = Math.floor(grid.length / 2);
+            let startCol = Math.floor((grid[0].length - wordList[0].word.length) / 2);
+            placeWord(wordList[0].word, startRow, startCol, 'horizontal');
 
-            // Place words in the grid
-            wordList.forEach(wordObj => {
-                placeWord(wordObj.word);
-            });
+            // Place the rest of the words
+            for (let i = 1; i < wordList.length; i++) {
+                placeWordRandomly(wordList[i].word);
+            }
 
-            // Render the grid
             renderGrid();
-
-            // Generate clues
             generateClues();
         }
 
-        function placeWord(word) {
-            const direction = Math.random() > 0.5 ? 'horizontal' : 'vertical';
-            let placed = false;
+        function placeWord(word, row, col, direction) {
+            for (let i = 0; i < word.length; i++) {
+                if (direction === 'horizontal') {
+                    grid[row][col + i] = word[i];
+                } else {
+                    grid[row + i][col] = word[i];
+                }
+            }
+            placedWords.push({ word, row, col, direction });
+        }
 
-            while (!placed) {
-                const row = Math.floor(Math.random() * (grid.length - (direction === 'vertical' ? word.length : 1)));
-                const col = Math.floor(Math.random() * (grid[0].length - (direction === 'horizontal' ? word.length : 1)));
+        function placeWordRandomly(word) {
+            let attempts = 0;
+            let placed = false;
+            while (!placed && attempts < 100) {
+                let direction = Math.random() > 0.5 ? 'horizontal' : 'vertical';
+                let row = Math.floor(Math.random() * grid.length);
+                let col = Math.floor(Math.random() * grid[0].length);
 
                 if (canPlaceWord(word, row, col, direction)) {
-                    for (let i = 0; i < word.length; i++) {
-                        if (direction === 'horizontal') {
-                            grid[row][col + i] = word[i];
-                        } else {
-                            grid[row + i][col] = word[i];
-                        }
-                    }
-                    placedWords.push({ word, row, col, direction });
+                    placeWord(word, row, col, direction);
                     placed = true;
                 }
+                attempts++;
             }
         }
 
         function canPlaceWord(word, row, col, direction) {
-            if (direction === 'horizontal' && col + word.length > grid[0].length) return false;
-            if (direction === 'vertical' && row + word.length > grid.length) return false;
+            if (direction === 'horizontal') {
+                if (col + word.length > grid[0].length) return false;
+                for (let i = 0; i < word.length; i++) {
+                    if (grid[row][col + i] !== ' ' && grid[row][col + i] !== word[i]) return false;
+                }
+            } else {
+                if (row + word.length > grid.length) return false;
+                for (let i = 0; i < word.length; i++) {
+                    if (grid[row + i][col] !== ' ' && grid[row + i][col] !== word[i]) return false;
+                }
+            }
 
+            // Check for connecting words
             for (let i = 0; i < word.length; i++) {
-                if (direction === 'horizontal' && grid[row][col + i] !== ' ' && grid[row][col + i] !== word[i]) return false;
-                if (direction === 'vertical' && grid[row + i][col] !== ' ' && grid[row + i][col] !== word[i]) return false;
+                if (direction === 'horizontal') {
+                    if ((col + i > 0 && grid[row][col + i - 1] !== ' ' && i === 0) || (col + i < grid[0].length - 1 && grid[row][col + i + 1] !== ' ' && i === word.length - 1)) {
+                        return false;
+                    }
+                } else {
+                    if ((row + i > 0 && grid[row + i - 1][col] !== ' ' && i === 0) || (row + i < grid.length - 1 && grid[row + i + 1][col] !== ' ' && i === word.length - 1)) {
+                        return false;
+                    }
+                }
             }
 
             return true;
