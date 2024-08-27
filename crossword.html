@@ -186,12 +186,11 @@
                     } else if (grid[i][j] === null) {
                         cell.className = 'black-cell';
                     } else {
-                        cell.className = 'cell filled-cell';
+                        cell.className = 'cell';
                         const input = document.createElement('input');
                         input.type = 'text';
                         input.maxLength = '1';
-                        input.value = grid[i][j];
-                        input.readOnly = true;
+                        input.value = ''; // Leave blank for user to fill in
                         cell.appendChild(input);
                     }
                     board.appendChild(cell);
