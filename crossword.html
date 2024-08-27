@@ -1,1 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crossword Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        #crossword-board {
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: repeat(10, 40px); /* 10 columns for the crossword */
+            grid-template-rows: repeat(10, 40px); /* 10 rows for the crossword */
+            gap: 2px;
+            width: 420px; /* width to accommodate 10 cells plus gaps */
+        }
 
+        .cell {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 18px;
+            border: 1px solid #000;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+
+        .black-cell {
+            background-color: #000;
+        }
+
+        input {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            border: none;
+            font-size: 18px;
+            outline: none;
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <h1>Crossword Game</h1>
+    <div id="crossword-board">
+        <!-- Define your crossword grid here with input fields -->
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <div class="black-cell"></div>
+        <div class="cell"><input type="text" maxlength="1"></div>
+        <!-- Repeat for a 10x10 grid -->
+    </div>
+    <button onclick="checkCrossword()">Check Solution</button>
+    <button onclick="window.location.href='index.html';">Back to Main Page</button>
+
+    <script>
+        function checkCrossword() {
+            // Logic to check crossword solution
+            alert('Crossword solution checked!'); // Placeholder logic
+        }
+    </script>
+</body>
+</html>
