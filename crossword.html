@@ -18,10 +18,7 @@
         #crossword-board {
             margin: 20px auto;
             display: grid;
-            grid-template-columns: repeat(10, 40px);
-            grid-template-rows: repeat(10, 40px);
             gap: 2px;
-            width: 420px;
             border: 2px solid #000;
             background-color: #fff;
         }
@@ -106,16 +103,20 @@
             { word: "JOKER", hint: "A wild card in a deck" }
         ];
 
-        let grid = Array(10).fill(null).map(() => Array(10).fill(''));
+        let grid = [];
         let placedWords = [];
 
         function generateCrossword() {
             // Clear grid and placed words
-            grid = Array(10).fill(null).map(() => Array(10).fill(''));
+            grid = [];
             placedWords = [];
             document.getElementById('crossword-board').innerHTML = '';
             document.getElementById('across-clues').innerHTML = '';
             document.getElementById('down-clues').innerHTML = '';
+
+            // Set initial grid dimensions (minimum size based on words)
+            const gridSize = 15;
+            grid = Array(gridSize).fill(null).map(() => Array(gridSize).fill(' '));
 
             // Place words in the grid
             wordList.forEach(wordObj => {
@@ -134,8 +135,8 @@
             let placed = false;
 
             while (!placed) {
-                const row = Math.floor(Math.random() * 10);
-                const col = Math.floor(Math.random() * 10);
+                const row = Math.floor(Math.random() * (grid.length - (direction === 'vertical' ? word.length : 1)));
+                const col = Math.floor(Math.random() * (grid[0].length - (direction === 'horizontal' ? word.length : 1)));
 
                 if (canPlaceWord(word, row, col, direction)) {
                     for (let i = 0; i < word.length; i++) {
@@ -147,26 +148,17 @@
                     }
                     placedWords.push({ word, row, col, direction });
                     placed = true;
-
-                    // Add black cells around the placed word to separate it from others
-                    if (direction === 'horizontal') {
-                        if (col > 0) grid[row][col - 1] = null; // Left side
-                        if (col + word.length < 10) grid[row][col + word.length] = null; // Right side
-                    } else {
-                        if (row > 0) grid[row - 1][col] = null; // Top side
-                        if (row + word.length < 10) grid[row + word.length][col] = null; // Bottom side
-                    }
                 }
             }
         }
 
         function canPlaceWord(word, row, col, direction) {
-            if (direction === 'horizontal' && col + word.length > 10) return false;
-            if (direction === 'vertical' && row + word.length > 10) return false;
+            if (direction === 'horizontal' && col + word.length > grid[0].length) return false;
+            if (direction === 'vertical' && row + word.length > grid.length) return false;
 
             for (let i = 0; i < word.length; i++) {
-                if (direction === 'horizontal' && (grid[row][col + i] !== '' && grid[row][col + i] !== word[i])) return false;
-                if (direction === 'vertical' && (grid[row + i][col] !== '' && grid[row + i][col] !== word[i])) return false;
+                if (direction === 'horizontal' && grid[row][col + i] !== ' ' && grid[row][col + i] !== word[i]) return false;
+                if (direction === 'vertical' && grid[row + i][col] !== ' ' && grid[row + i][col] !== word[i]) return false;
             }
 
             return true;
@@ -174,16 +166,13 @@
 
         function renderGrid() {
             const board = document.getElementById('crossword-board');
-            for (let i = 0; i < 10; i++) {
-                for (let j = 0; j < 10; j++) {
+            board.style.gridTemplateColumns = `repeat(${grid[0].length}, 40px)`;
+            board.style.gridTemplateRows = `repeat(${grid.length}, 40px)`;
+
+            for (let i = 0; i < grid.length; i++) {
+                for (let j = 0; j < grid[i].length; j++) {
                     const cell = document.createElement('div');
-                    if (grid[i][j] === '') {
-                        cell.className = 'cell';
-                        const input = document.createElement('input');
-                        input.type = 'text';
-                        input.maxLength = '1';
-                        cell.appendChild(input);
-                    } else if (grid[i][j] === null) {
+                    if (grid[i][j] === ' ') {
                         cell.className = 'black-cell';
                     } else {
                         cell.className = 'cell';
@@ -229,8 +218,8 @@
 
             let isCorrect = true;
             cells.forEach((cell, index) => {
-                const row = Math.floor(index / 10);
-                const col = index % 10;
+                const row = Math.floor(index / grid[0].length);
+                const col = index % grid[0].length;
                 if (cell.value.toUpperCase() !== (grid[row][col] || '')) {
                     isCorrect = false;
                 }
