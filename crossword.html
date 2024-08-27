@@ -128,9 +128,11 @@
             let startCol = Math.floor((grid[0].length - wordList[0].word.length) / 2);
             placeWord(wordList[0].word, startRow, startCol, 'horizontal');
 
-            // Place the rest of the words ensuring they connect properly
+            // Place the rest of the words ensuring they connect properly and don't repeat
             for (let i = 1; i < wordList.length; i++) {
-                placeWordConnected(wordList[i].word);
+                if (!placedWords.some(w => w.word === wordList[i].word)) {
+                    placeWordConnected(wordList[i].word);
+                }
             }
 
             renderGrid();
