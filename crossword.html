@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crossword Game</title>
+    <title>Dynamic Crossword Game</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
@@ -77,156 +77,122 @@
 
 <body>
     <h1>Crossword Game</h1>
-    <div id="crossword-board">
-        <!-- Define a more complex 10x10 crossword grid -->
-        <!-- Predefined crossword structure with black cells as placeholders -->
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-
-        <div class="black-cell"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="black-cell"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-        <div class="cell"><input type="text" maxlength="1"></div>
-    </div>
+    <div id="crossword-board"></div>
 
     <!-- Clues for the crossword -->
     <div class="clues">
         <h2>Clues</h2>
         <h3>Across</h3>
-        <p>1. A type of tree (3 letters)</p>
-        <p>4. Opposite of fast (4 letters)</p>
-        <p>5. A room in a house (4 letters)</p>
-        <p>6. Opposite of day (5 letters)</p>
-        <p>8. Opposite of hot (4 letters)</p>
-        <p>9. An ocean animal (4 letters)</p>
+        <ul id="across-clues"></ul>
         <h3>Down</h3>
-        <p>1. A fruit (4 letters)</p>
-        <p>2. Opposite of night (3 letters)</p>
-        <p>3. Opposite of up (4 letters)</p>
-        <p>5. A pet animal (3 letters)</p>
-        <p>7. A large body of water (5 letters)</p>
-        <p>8. Opposite of heavy (5 letters)</p>
+        <ul id="down-clues"></ul>
     </div>
 
-    <button onclick="regenerateCrossword()">Regenerate Puzzle</button>
+    <button onclick="generateCrossword()">Regenerate Puzzle</button>
     <button onclick="checkCrossword()">Check Solution</button>
     <button onclick="window.location.href='index.html';">Back to Main Page</button>
 
     <script>
-        const correctAnswers = [
-            ['O', 'A', 'K', null, 'S', 'L', null, 'B', 'A', 'Y'],
-            ['P', null, 'E', 'A', null, 'O', null, 'E', null, 'T'],
-            ['L', null, 'A', 'N', null, 'W', null, 'O', null, 'E'],
-            [null, null, 'S', null, 'L', null, 'M', null, 'A', null],
-            ['B', null, 'T', 'O', 'I', 'M', null, 'R', null, 'S'],
-            ['E', null, 'G', null, 'N', null, 'S', null, 'H', null],
-            ['A', null, 'H', null, 'T', null, 'E', null, 'E', 'L'],
-            ['R', null, 'O', null, 'O', null, 'A', 'C', null, 'E'],
-            ['K', 'L', 'E', null, 'S', 'E', null, 'E', 'E', 'S'],
-            ['O', null, null, 'M', 'O', 'O', 'N', null, 'S', 'T'],
+        const wordList = [
+            { word: "APPLE", hint: "A fruit" },
+            { word: "BEAR", hint: "A large mammal" },
+            { word: "CAT", hint: "A common pet" },
+            { word: "DOG", hint: "Man's best friend" },
+            { word: "EAGLE", hint: "A bird of prey" },
+            { word: "FISH", hint: "Lives in water" },
+            { word: "GRAPE", hint: "A small fruit" },
+            { word: "HORSE", hint: "Ridden by cowboys" },
+            { word: "IGLOO", hint: "An ice house" },
+            { word: "JOKER", hint: "A wild card in a deck" }
         ];
+
+        let grid = Array(10).fill(null).map(() => Array(10).fill(''));
+        let placedWords = [];
+
+        function generateCrossword() {
+            // Clear grid and placed words
+            grid = Array(10).fill(null).map(() => Array(10).fill(''));
+            placedWords = [];
+            document.getElementById('crossword-board').innerHTML = '';
+            document.getElementById('across-clues').innerHTML = '';
+            document.getElementById('down-clues').innerHTML = '';
+
+            // Place words in the grid
+            wordList.forEach(wordObj => {
+                placeWord(wordObj.word);
+            });
+
+            // Render the grid
+            renderGrid();
+
+            // Generate clues
+            generateClues();
+        }
+
+        function placeWord(word) {
+            const direction = Math.random() > 0.5 ? 'horizontal' : 'vertical';
+            let placed = false;
+
+            while (!placed) {
+                const row = Math.floor(Math.random() * 10);
+                const col = Math.floor(Math.random() * 10);
+
+                if (canPlaceWord(word, row, col, direction)) {
+                    for (let i = 0; i < word.length; i++) {
+                        if (direction === 'horizontal') {
+                            grid[row][col + i] = word[i];
+                        } else {
+                            grid[row + i][col] = word[i];
+                        }
+                    }
+                    placedWords.push({ word, row, col, direction });
+                    placed = true;
+                }
+            }
+        }
+
+        function canPlaceWord(word, row, col, direction) {
+            if (direction === 'horizontal' && col + word.length > 10) return false;
+            if (direction === 'vertical' && row + word.length > 10) return false;
+
+            for (let i = 0; i < word.length; i++) {
+                if (direction === 'horizontal' && grid[row][col + i] !== '' && grid[row][col + i] !== word[i]) return false;
+                if (direction === 'vertical' && grid[row + i][col] !== '' && grid[row + i][col] !== word[i]) return false;
+            }
+
+            return true;
+        }
+
+        function renderGrid() {
+            const board = document.getElementById('crossword-board');
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = grid[i][j] === '' ? 'cell' : 'cell filled-cell';
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.maxLength = '1';
+                    input.value = grid[i][j] === '' ? '' : grid[i][j];
+                    input.readOnly = grid[i][j] !== '';
+                    cell.appendChild(input);
+                    board.appendChild(cell);
+                }
+            }
+        }
+
+        function generateClues() {
+            placedWords.forEach((wordObj, index) => {
+                const clueText = `${index + 1}. ${wordList.find(w => w.word === wordObj.word).hint} (${wordObj.word.length} letters)`;
+                const clueItem = document.createElement('li');
+                clueItem.textContent = clueText;
+
+                if (wordObj.direction === 'horizontal') {
+                    document.getElementById('across-clues').appendChild(clueItem);
+                } else {
+                    document.getElementById('down-clues').appendChild(clueItem);
+                }
+            });
+        }
 
         function checkCrossword() {
             let isCorrect = true;
@@ -235,7 +201,7 @@
             cells.forEach((cell, index) => {
                 const row = Math.floor(index / 10);
                 const col = index % 10;
-                if (cell.value.toUpperCase() !== (correctAnswers[row][col] || '')) {
+                if (cell.value.toUpperCase() !== (grid[row][col] || '')) {
                     isCorrect = false;
                 }
             });
@@ -247,18 +213,8 @@
             }
         }
 
-        function regenerateCrossword() {
-            const newHints = [
-                'New set of hints will be implemented here...'
-            ];
-            alert('New crossword puzzle and hints generated!');
-
-            // Here, you can implement a more advanced regeneration logic for clues and grid.
-            // You could randomize grid entries and provide corresponding hints dynamically.
-        }
-
         window.onload = function () {
-            regenerateCrossword(); // Initialize crossword on page load
+            generateCrossword();
         };
     </script>
 </body>
