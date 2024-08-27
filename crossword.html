@@ -114,11 +114,13 @@
 
         let grid = [];
         let placedWords = [];
+        let placedWordSet = new Set();  // Set to track placed words
 
         function generateCrossword() {
             // Clear grid and placed words
             grid = Array(15).fill(null).map(() => Array(15).fill(' '));
             placedWords = [];
+            placedWordSet.clear();  // Clear the set to track placed words
             document.getElementById('crossword-board').innerHTML = '';
             document.getElementById('across-clues').innerHTML = '';
             document.getElementById('down-clues').innerHTML = '';
@@ -130,7 +132,7 @@
 
             // Place the rest of the words ensuring they connect properly and don't repeat
             for (let i = 1; i < wordList.length; i++) {
-                if (!placedWords.some(w => w.word === wordList[i].word)) {
+                if (!placedWordSet.has(wordList[i].word)) {
                     placeWordConnected(wordList[i].word);
                 }
             }
@@ -148,6 +150,7 @@
                 }
             }
             placedWords.push({ word, row, col, direction });
+            placedWordSet.add(word);  // Add the word to the set
         }
 
         function placeWordConnected(word) {
@@ -213,15 +216,20 @@
         }
 
         function generateClues() {
+            const acrossClues = new Set();
+            const downClues = new Set();
+
             placedWords.forEach((wordObj, index) => {
                 const clueText = `${index + 1}. ${wordList.find(w => w.word === wordObj.word).hint} (${wordObj.word.length} letters)`;
                 const clueItem = document.createElement('li');
                 clueItem.textContent = clueText;
 
-                if (wordObj.direction === 'horizontal') {
+                if (wordObj.direction === 'horizontal' && !acrossClues.has(wordObj.word)) {
                     document.getElementById('across-clues').appendChild(clueItem);
-                } else {
+                    acrossClues.add(wordObj.word);
+                } else if (wordObj.direction === 'vertical' && !downClues.has(wordObj.word)) {
                     document.getElementById('down-clues').appendChild(clueItem);
+                    downClues.add(wordObj.word);
                 }
             });
         }
