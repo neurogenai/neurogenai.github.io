@@ -147,6 +147,15 @@
                     }
                     placedWords.push({ word, row, col, direction });
                     placed = true;
+
+                    // Add black cells around the placed word to separate it from others
+                    if (direction === 'horizontal') {
+                        if (col > 0) grid[row][col - 1] = null; // Left side
+                        if (col + word.length < 10) grid[row][col + word.length] = null; // Right side
+                    } else {
+                        if (row > 0) grid[row - 1][col] = null; // Top side
+                        if (row + word.length < 10) grid[row + word.length][col] = null; // Bottom side
+                    }
                 }
             }
         }
@@ -156,8 +165,8 @@
             if (direction === 'vertical' && row + word.length > 10) return false;
 
             for (let i = 0; i < word.length; i++) {
-                if (direction === 'horizontal' && grid[row][col + i] !== '' && grid[row][col + i] !== word[i]) return false;
-                if (direction === 'vertical' && grid[row + i][col] !== '' && grid[row + i][col] !== word[i]) return false;
+                if (direction === 'horizontal' && (grid[row][col + i] !== '' && grid[row][col + i] !== word[i])) return false;
+                if (direction === 'vertical' && (grid[row + i][col] !== '' && grid[row + i][col] !== word[i])) return false;
             }
 
             return true;
@@ -168,13 +177,23 @@
             for (let i = 0; i < 10; i++) {
                 for (let j = 0; j < 10; j++) {
                     const cell = document.createElement('div');
-                    cell.className = grid[i][j] === '' ? 'cell' : 'cell filled-cell';
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.maxLength = '1';
-                    input.value = grid[i][j] === '' ? '' : grid[i][j];
-                    input.readOnly = grid[i][j] !== '';
-                    cell.appendChild(input);
+                    if (grid[i][j] === '') {
+                        cell.className = 'cell';
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.maxLength = '1';
+                        cell.appendChild(input);
+                    } else if (grid[i][j] === null) {
+                        cell.className = 'black-cell';
+                    } else {
+                        cell.className = 'cell filled-cell';
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.maxLength = '1';
+                        input.value = grid[i][j];
+                        input.readOnly = true;
+                        cell.appendChild(input);
+                    }
                     board.appendChild(cell);
                 }
             }
