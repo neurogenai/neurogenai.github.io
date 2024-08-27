@@ -116,9 +116,17 @@
         let placedWords = [];
         let placedWordSet = new Set();  // Set to track placed words
 
+        function calculateGridSize() {
+            // Determine the smallest grid size that can accommodate all words
+            let totalLetters = wordList.reduce((sum, wordObj) => sum + wordObj.word.length, 0);
+            let gridSize = Math.ceil(Math.sqrt(totalLetters * 2));  // Estimate grid size
+            return gridSize;
+        }
+
         function generateCrossword() {
+            const gridSize = calculateGridSize();
             // Clear grid and placed words
-            grid = Array(15).fill(null).map(() => Array(15).fill(' '));
+            grid = Array(gridSize).fill(null).map(() => Array(gridSize).fill(' '));
             placedWords = [];
             placedWordSet.clear();  // Clear the set to track placed words
             document.getElementById('crossword-board').innerHTML = '';
