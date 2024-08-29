@@ -7,14 +7,7 @@
     <title>Dynamic Crossword Game</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
-        }
-
+        /* Additional CSS for the crossword game */
         #crossword-board-container {
             display: flex;
             justify-content: center;
@@ -32,6 +25,7 @@
         .cell {
             width: 40px;
             height: 40px;
+            position: relative;
             text-align: center;
             font-size: 18px;
             border: 1px solid #000;
@@ -39,13 +33,7 @@
             background-color: #fff;
         }
 
-        .black-cell {
-            width: 40px;
-            height: 40px;
-            background-color: #000;
-        }
-
-        input {
+        .cell input {
             width: 100%;
             height: 100%;
             text-align: center;
@@ -53,6 +41,22 @@
             font-size: 18px;
             outline: none;
             background-color: transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .subscript {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            font-size: 10px;
+        }
+
+        .black-cell {
+            width: 40px;
+            height: 40px;
+            background-color: #000;
         }
 
         .clues {
@@ -99,7 +103,6 @@
     <button onclick="window.location.href='index.html';">Back to Main Page</button>
 
     <script>
-        // Large word list for variety
         const wordList = [
             { word: "APPLE", hint: "A fruit" },
             { word: "BEAR", hint: "A large mammal" },
@@ -134,7 +137,6 @@
         let placedWordSet = new Set();  // Set to track placed words
 
         function calculateGridSize() {
-            // Determine the smallest grid size that can accommodate all words
             let totalLetters = wordList.reduce((sum, wordObj) => sum + wordObj.word.length, 0);
             let gridSize = Math.ceil(Math.sqrt(totalLetters * 2));  // Estimate grid size
             return gridSize;
@@ -142,23 +144,19 @@
 
         function generateCrossword() {
             const gridSize = calculateGridSize();
-            // Clear grid and placed words
             grid = Array(gridSize).fill(null).map(() => Array(gridSize).fill(' '));
             placedWords = [];
-            placedWordSet.clear();  // Clear the set to track placed words
+            placedWordSet.clear();
             document.getElementById('crossword-board').innerHTML = '';
             document.getElementById('across-clues').innerHTML = '';
             document.getElementById('down-clues').innerHTML = '';
 
-            // Randomize word list for variety
             const shuffledWordList = [...wordList].sort(() => 0.5 - Math.random());
 
-            // Place the first word in the center
             let startRow = Math.floor(grid.length / 2);
             let startCol = Math.floor((grid[0].length - shuffledWordList[0].word.length) / 2);
             placeWord(shuffledWordList[0].word, startRow, startCol, 'horizontal');
 
-            // Place the rest of the words ensuring they connect properly and don't repeat
             for (let i = 1; i < shuffledWordList.length; i++) {
                 if (!placedWordSet.has(shuffledWordList[i].word)) {
                     placeWordConnected(shuffledWordList[i].word);
@@ -178,7 +176,7 @@
                 }
             }
             placedWords.push({ word, row, col, direction });
-            placedWordSet.add(word);  // Add the word to the set
+            placedWordSet.add(word);
         }
 
         function placeWordConnected(word) {
@@ -225,22 +223,31 @@
             board.style.gridTemplateColumns = `repeat(${grid[0].length}, 40px)`;
             board.style.gridTemplateRows = `repeat(${grid.length}, 40px)`;
 
-            for (let i = 0; i < grid.length; i++) {
-                for (let j = 0; j < grid[i].length; j++) {
+            placedWords.forEach((wordObj, index) => {
+                const startRow = wordObj.row;
+                const startCol = wordObj.col;
+                const direction = wordObj.direction;
+                for (let i = 0; i < wordObj.word.length; i++) {
+                    const row = direction === 'horizontal' ? startRow : startRow + i;
+                    const col = direction === 'horizontal' ? startCol + i : startCol;
+
                     const cell = document.createElement('div');
-                    if (grid[i][j] === ' ') {
-                        cell.className = 'black-cell';
-                    } else {
-                        cell.className = 'cell';
-                        const input = document.createElement('input');
-                        input.type = 'text';
-                        input.maxLength = '1';
-                        input.value = ''; // Leave blank for user to fill in
-                        cell.appendChild(input);
-                    }
+                    cell.className = 'cell';
+
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.maxLength = '1';
+                    input.value = ''; // Leave blank for user to fill in
+
+                    const subscript = document.createElement('div');
+                    subscript.className = 'subscript';
+                    if (i === 0) subscript.textContent = index + 1; // Only show hint number at the start of a word
+
+                    cell.appendChild(input);
+                    cell.appendChild(subscript);
                     board.appendChild(cell);
                 }
-            }
+            });
         }
 
         function generateClues() {
