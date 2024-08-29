@@ -4,46 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Crossword Game</title>
+    <title>Simple Crossword Game</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Additional CSS for the crossword game */
-        #crossword-board-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
         }
 
         #crossword-board {
             display: grid;
+            grid-template-columns: repeat(10, 40px);
             gap: 2px;
+            margin: 20px auto;
             border: 2px solid #000;
-            background-color: #fff;
-            margin: auto;
         }
 
         .cell {
             width: 40px;
             height: 40px;
-            position: relative;
-            text-align: center;
-            font-size: 18px;
             border: 1px solid #000;
-            box-sizing: border-box;
-            background-color: #fff;
+            position: relative;
         }
 
         .cell input {
             width: 100%;
             height: 100%;
-            text-align: center;
             border: none;
+            text-align: center;
             font-size: 18px;
-            outline: none;
             background-color: transparent;
-            position: absolute;
-            top: 0;
-            left: 0;
+            outline: none;
         }
 
         .subscript {
@@ -54,21 +48,18 @@
         }
 
         .black-cell {
-            width: 40px;
-            height: 40px;
             background-color: #000;
         }
 
         .clues {
             text-align: left;
             margin: 20px auto;
-            width: 300px;
+            width: 200px;
         }
 
         button {
             padding: 10px 20px;
-            font-size: 16px;
-            margin: 15px 5px;
+            margin: 10px;
             cursor: pointer;
             background-color: #4CAF50;
             color: white;
@@ -84,12 +75,7 @@
 
 <body>
     <h1>Crossword Game</h1>
-    
-    <div id="crossword-board-container">
-        <div id="crossword-board"></div>
-    </div>
-
-    <!-- Clues for the crossword -->
+    <div id="crossword-board"></div>
     <div class="clues">
         <h2>Clues</h2>
         <h3>Across</h3>
@@ -97,86 +83,38 @@
         <h3>Down</h3>
         <ul id="down-clues"></ul>
     </div>
-
     <button onclick="generateCrossword()">Regenerate Puzzle</button>
     <button onclick="checkCrossword()">Check Solution</button>
-    <button onclick="window.location.href='index.html';">Back to Main Page</button>
 
     <script>
-        // Large word list for variety
         const wordList = [
             { word: "APPLE", hint: "A fruit" },
             { word: "BEAR", hint: "A large mammal" },
             { word: "CAT", hint: "A common pet" },
             { word: "DOG", hint: "Man's best friend" },
-            { word: "EAGLE", hint: "A bird of prey" },
             { word: "FISH", hint: "Lives in water" },
-            { word: "GRAPE", hint: "A small fruit" },
-            { word: "HORSE", hint: "Ridden by cowboys" },
-            { word: "IGLOO", hint: "An ice house" },
-            { word: "JOKER", hint: "A wild card in a deck" },
-            { word: "KING", hint: "A male monarch" },
-            { word: "LION", hint: "King of the jungle" },
-            { word: "MOUSE", hint: "A small rodent" },
-            { word: "NINJA", hint: "A stealthy warrior" },
-            { word: "ORANGE", hint: "A citrus fruit" },
-            { word: "PYTHON", hint: "A large snake or a programming language" },
-            { word: "QUEEN", hint: "A female monarch" },
-            { word: "RAVEN", hint: "A black bird" },
-            { word: "SNAKE", hint: "A legless reptile" },
-            { word: "TIGER", hint: "A large striped cat" },
-            { word: "UMBRELLA", hint: "Used to protect from rain" },
-            { word: "VAMPIRE", hint: "A mythical blood-sucker" },
-            { word: "WHALE", hint: "A large sea mammal" },
-            { word: "XYLOPHONE", hint: "A musical instrument" },
-            { word: "YACHT", hint: "A large boat" },
-            { word: "ZEBRA", hint: "A striped horse-like animal" }
+            { word: "HORSE", hint: "Ridden by cowboys" }
         ];
 
-        const MAX_LETTER_SQUARES = 50;
-        const MIN_BLANK_SQUARES = 20;
-
-        let grid = [];
-        let placedWords = [];
-        let placedWordSet = new Set();  // Set to track placed words
-
-        function calculateGridSize() {
-            let totalSquares = MAX_LETTER_SQUARES + MIN_BLANK_SQUARES;
-            let gridSize = Math.ceil(Math.sqrt(totalSquares));
-            return gridSize;
-        }
-
         function generateCrossword() {
-            const gridSize = calculateGridSize();
-            grid = Array(gridSize).fill(null).map(() => Array(gridSize).fill(' '));
-            placedWords = [];
-            placedWordSet.clear();
+            const gridSize = 10;
+            const grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(' '));
             document.getElementById('crossword-board').innerHTML = '';
             document.getElementById('across-clues').innerHTML = '';
             document.getElementById('down-clues').innerHTML = '';
+            
+            placeWord(grid, wordList[0].word, 1, 1, 'horizontal', 1);
+            placeWord(grid, wordList[1].word, 3, 1, 'vertical', 2);
+            placeWord(grid, wordList[2].word, 5, 3, 'horizontal', 3);
+            placeWord(grid, wordList[3].word, 0, 6, 'vertical', 4);
+            placeWord(grid, wordList[4].word, 7, 7, 'horizontal', 5);
+            placeWord(grid, wordList[5].word, 8, 2, 'vertical', 6);
 
-            const shuffledWordList = [...wordList].sort(() => 0.5 - Math.random());
-            let lettersPlaced = 0;
-
-            let startRow = Math.floor(grid.length / 2);
-            let startCol = Math.floor((grid[0].length - shuffledWordList[0].word.length) / 2);
-            if (lettersPlaced + shuffledWordList[0].word.length <= MAX_LETTER_SQUARES) {
-                placeWord(shuffledWordList[0].word, startRow, startCol, 'horizontal');
-                lettersPlaced += shuffledWordList[0].word.length;
-            }
-
-            for (let i = 1; i < shuffledWordList.length; i++) {
-                if (!placedWordSet.has(shuffledWordList[i].word) && lettersPlaced + shuffledWordList[i].word.length <= MAX_LETTER_SQUARES) {
-                    placeWordConnected(shuffledWordList[i].word);
-                    lettersPlaced += shuffledWordList[i].word.length;
-                }
-            }
-
-            renderGrid();
+            renderGrid(grid);
             generateClues();
         }
 
-        function placeWord(word, row, col, direction) {
+        function placeWord(grid, word, row, col, direction, index) {
             for (let i = 0; i < word.length; i++) {
                 if (direction === 'horizontal') {
                     grid[row][col + i] = word[i];
@@ -184,143 +122,54 @@
                     grid[row + i][col] = word[i];
                 }
             }
-            placedWords.push({ word, row, col, direction });
-            placedWordSet.add(word);
+            addClue(index, word, direction);
         }
 
-        function placeWordConnected(word) {
-            let placed = false;
-            for (let attempt = 0; attempt < 100 && !placed; attempt++) {
-                for (let r = 0; r < grid.length; r++) {
-                    for (let c = 0; c < grid[r].length; c++) {
-                        if (grid[r][c] !== ' ') {
-                            const letter = grid[r][c];
-                            for (let i = 0; i < word.length; i++) {
-                                if (word[i] === letter) {
-                                    if (canPlaceWord(word, r - i, c, 'vertical')) {
-                                        placeWord(word, r - i, c, 'vertical');
-                                        placed = true;
-                                    } else if (canPlaceWord(word, r, c - i, 'horizontal')) {
-                                        placeWord(word, r, c - i, 'horizontal');
-                                        placed = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        function canPlaceWord(word, row, col, direction) {
+        function addClue(index, word, direction) {
+            const clueText = `${index}. ${wordList.find(w => w.word === word).hint} (${word.length} letters)`;
+            const clueItem = document.createElement('li');
+            clueItem.textContent = clueText;
             if (direction === 'horizontal') {
-                if (col < 0 || col + word.length > grid[0].length) return false;
-                for (let i = 0; i < word.length; i++) {
-                    if (grid[row][col + i] !== ' ' && grid[row][col + i] !== word[i]) return false;
-                }
+                document.getElementById('across-clues').appendChild(clueItem);
             } else {
-                if (row < 0 || row + word.length > grid.length) return false;
-                for (let i = 0; i < word.length; i++) {
-                    if (grid[row + i][col] !== ' ' && grid[row + i][col] !== word[i]) return false;
-                }
+                document.getElementById('down-clues').appendChild(clueItem);
             }
-            return true;
         }
 
-        function renderGrid() {
+        function renderGrid(grid) {
             const board = document.getElementById('crossword-board');
-            board.style.gridTemplateColumns = `repeat(${grid[0].length}, 40px)`;
-            board.style.gridTemplateRows = `repeat(${grid.length}, 40px)`;
-
-            placedWords.forEach((wordObj, index) => {
-                const startRow = wordObj.row;
-                const startCol = wordObj.col;
-                const direction = wordObj.direction;
-                for (let i = 0; i < wordObj.word.length; i++) {
-                    const row = direction === 'horizontal' ? startRow : startRow + i;
-                    const col = direction === 'horizontal' ? startCol + i : startCol;
-
+            for (let i = 0; i < grid.length; i++) {
+                for (let j = 0; j < grid[i].length; j++) {
                     const cell = document.createElement('div');
                     cell.className = 'cell';
-
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.maxLength = '1';
-                    input.value = ''; // Leave blank for user to fill in
-
-                    const subscript = document.createElement('div');
-                    subscript.className = 'subscript';
-                    if (i === 0) subscript.textContent = index + 1; // Only show hint number at the start of a word
-
-                    cell.appendChild(input);
-                    cell.appendChild(subscript);
+                    if (grid[i][j] !== ' ') {
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.maxLength = '1';
+                        const subscript = document.createElement('div');
+                        subscript.className = 'subscript';
+                        cell.appendChild(input);
+                        cell.appendChild(subscript);
+                    } else {
+                        cell.className += ' black-cell';
+                    }
                     board.appendChild(cell);
                 }
-            });
-
-            // Add blank cells to ensure 20 minimum blank spaces
-            let blankSquares = grid.flat().filter(cell => cell === ' ').length;
-            while (blankSquares < MIN_BLANK_SQUARES) {
-                const emptyCell = document.createElement('div');
-                emptyCell.className = 'black-cell';
-                board.appendChild(emptyCell);
-                blankSquares++;
             }
-        }
-
-        function generateClues() {
-            const acrossClues = new Set();
-            const downClues = new Set();
-
-            placedWords.forEach((wordObj, index) => {
-                const clueText = `${index + 1}. ${wordList.find(w => w.word === wordObj.word).hint} (${wordObj.word.length} letters)`;
-                const clueItem = document.createElement('li');
-                clueItem.textContent = clueText;
-
-                if (wordObj.direction === 'horizontal' && !acrossClues.has(wordObj.word)) {
-                    document.getElementById('across-clues').appendChild(clueItem);
-                    acrossClues.add(wordObj.word);
-                } else if (wordObj.direction === 'vertical' && !downClues.has(wordObj.word)) {
-                    document.getElementById('down-clues').appendChild(clueItem);
-                    downClues.add(wordObj.word);
-                }
-            });
         }
 
         function checkCrossword() {
-            let isFilled = true;
-            const cells = document.querySelectorAll('#crossword-board .cell input');
-
-            cells.forEach((cell) => {
-                if (cell.value.trim() === '') {
-                    isFilled = false;
-                }
-            });
-
-            if (!isFilled) {
-                alert('Please fill in all the cells before checking the solution.');
-                return;
-            }
-
             let isCorrect = true;
-            cells.forEach((cell, index) => {
-                const row = Math.floor(index / grid[0].length);
-                const col = index % grid[0].length;
-                if (cell.value.toUpperCase() !== (grid[row][col] || '')) {
+            const cells = document.querySelectorAll('#crossword-board .cell input');
+            cells.forEach(cell => {
+                if (cell.value.trim() === '') {
                     isCorrect = false;
                 }
             });
-
-            if (isCorrect) {
-                alert('Congratulations! You solved the crossword!');
-            } else {
-                alert('Some answers are incorrect. Please try again.');
-            }
+            alert(isCorrect ? 'Correct!' : 'Try again.');
         }
 
-        window.onload = function () {
-            generateCrossword();
-        };
+        window.onload = generateCrossword;
     </script>
 </body>
 
