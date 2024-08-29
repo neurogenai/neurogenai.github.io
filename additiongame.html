@@ -27,31 +27,38 @@
         const operators = ['+', '-', '*', '/'];
 
         function generateQuestion() {
-            const num1 = Math.floor(Math.random() * 90) + 10; // Generates a number between 10 and 99
-            const num2 = Math.floor(Math.random() * 90) + 10; // Generates a number between 10 and 99
-            const operator = operators[Math.floor(Math.random() * operators.length)];
+            let num1, num2, operator;
+            let isValidAnswer = false;
 
-            let displayNum1 = num1;
-            let displayNum2 = num2;
+            while (!isValidAnswer) {
+                num1 = Math.floor(Math.random() * 90) + 10; // Generates a number between 10 and 99
+                num2 = Math.floor(Math.random() * 90) + 10; // Generates a number between 10 and 99
+                operator = operators[Math.floor(Math.random() * operators.length)];
 
-            switch (operator) {
-                case '+':
-                    correctAnswer = num1 + num2;
-                    break;
-                case '-':
-                    correctAnswer = num1 - num2;
-                    break;
-                case '*':
-                    correctAnswer = num1 * num2;
-                    break;
-                case '/':
-                    // Ensure division results in a whole number by adjusting num1
-                    displayNum1 = num1 * num2; // Make sure num1 is always divisible by num2
-                    correctAnswer = displayNum1 / num2;
-                    break;
+                switch (operator) {
+                    case '+':
+                        correctAnswer = num1 + num2;
+                        break;
+                    case '-':
+                        correctAnswer = num1 - num2;
+                        break;
+                    case '*':
+                        correctAnswer = num1 * num2;
+                        break;
+                    case '/':
+                        // Ensure division results in a whole number
+                        num1 = num1 * num2; // Make sure num1 is always divisible by num2
+                        correctAnswer = num1 / num2;
+                        break;
+                }
+
+                // Check if the answer is within the two-digit range
+                if (correctAnswer >= -99 && correctAnswer <= 99) {
+                    isValidAnswer = true;
+                }
             }
 
-            document.getElementById('question').textContent = `What is ${displayNum1} ${operator} ${displayNum2}?`;
+            document.getElementById('question').textContent = `What is ${num1} ${operator} ${num2}?`;
             document.getElementById('result').textContent = '';
             document.getElementById('answer').value = '';
             document.getElementById('nextButton').style.display = 'none'; // Hide "Next Question" button
