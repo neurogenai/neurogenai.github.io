@@ -1,101 +1,176 @@
-/* Main Page Styles */
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
-}
+<!DOCTYPE html>
+<html lang="en">
 
-header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 20px;
-    margin-bottom: 20px;
-}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Crossword Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
 
-main {
-    margin: 20px;
-}
+        #crossword-board {
+            display: grid;
+            grid-template-columns: repeat(10, 40px);
+            gap: 2px;
+            margin: 20px auto;
+            border: 2px solid #000;
+        }
 
-button {
-    padding: 15px 30px;
-    font-size: 18px;
-    margin: 10px;
-    cursor: pointer;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-}
+        .cell {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #000;
+            position: relative;
+        }
 
-button:hover {
-    background-color: #45a049;
-}
+        .cell input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            text-align: center;
+            font-size: 18px;
+            background-color: transparent;
+            outline: none;
+        }
 
-footer {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-}
+        .subscript {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            font-size: 10px;
+        }
 
-/* Crossword Specific Styles */
-#crossword-board-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-}
+        .black-cell {
+            background-color: #000;
+        }
 
-#crossword-board {
-    display: grid;
-    gap: 2px;
-    border: 2px solid #000;
-    background-color: #fff;
-    margin: auto;
-}
+        .clues {
+            text-align: left;
+            margin: 20px auto;
+            width: 200px;
+        }
 
-.cell {
-    width: 40px;
-    height: 40px;
-    position: relative;
-    text-align: center;
-    font-size: 18px;
-    border: 1px solid #000;
-    box-sizing: border-box;
-    background-color: #fff;
-}
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
 
-.cell input {
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    border: none;
-    font-size: 18px;
-    outline: none;
-    background-color: transparent;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
 
-.subscript {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    font-size: 10px;
-}
+<body>
+    <h1>Crossword Game</h1>
+    <div id="crossword-board"></div>
+    <div class="clues">
+        <h2>Clues</h2>
+        <h3>Across</h3>
+        <ul id="across-clues"></ul>
+        <h3>Down</h3>
+        <ul id="down-clues"></ul>
+    </div>
+    <button onclick="generateCrossword()">Regenerate Puzzle</button>
+    <button onclick="checkCrossword()">Check Solution</button>
 
-.black-cell {
-    width: 40px;
-    height: 40px;
-    background-color: #000;
-}
+    <script>
+        const wordList = [
+            { word: "APPLE", hint: "A fruit" },
+            { word: "BEAR", hint: "A large mammal" },
+            { word: "CAT", hint: "A common pet" },
+            { word: "DOG", hint: "Man's best friend" },
+            { word: "FISH", hint: "Lives in water" },
+            { word: "HORSE", hint: "Ridden by cowboys" }
+        ];
 
-.clues {
-    text-align: left;
-    margin: 20px auto;
-    width: 300px;
-}
+        function generateCrossword() {
+            const gridSize = 10;
+            const grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(' '));
+            document.getElementById('crossword-board').innerHTML = '';
+            document.getElementById('across-clues').innerHTML = '';
+            document.getElementById('down-clues').innerHTML = '';
+            
+            placeWord(grid, wordList[0].word, 1, 1, 'horizontal', 1);
+            placeWord(grid, wordList[1].word, 3, 1, 'vertical', 2);
+            placeWord(grid, wordList[2].word, 5, 3, 'horizontal', 3);
+            placeWord(grid, wordList[3].word, 0, 6, 'vertical', 4);
+            placeWord(grid, wordList[4].word, 7, 7, 'horizontal', 5);
+            placeWord(grid, wordList[5].word, 8, 2, 'vertical', 6);
+
+            renderGrid(grid);
+            generateClues();
+        }
+
+        function placeWord(grid, word, row, col, direction, index) {
+            for (let i = 0; i < word.length; i++) {
+                if (direction === 'horizontal') {
+                    grid[row][col + i] = word[i];
+                } else {
+                    grid[row + i][col] = word[i];
+                }
+            }
+            addClue(index, word, direction);
+        }
+
+        function addClue(index, word, direction) {
+            const clueText = `${index}. ${wordList.find(w => w.word === word).hint} (${word.length} letters)`;
+            const clueItem = document.createElement('li');
+            clueItem.textContent = clueText;
+            if (direction === 'horizontal') {
+                document.getElementById('across-clues').appendChild(clueItem);
+            } else {
+                document.getElementById('down-clues').appendChild(clueItem);
+            }
+        }
+
+        function renderGrid(grid) {
+            const board = document.getElementById('crossword-board');
+            for (let i = 0; i < grid.length; i++) {
+                for (let j = 0; j < grid[i].length; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    if (grid[i][j] !== ' ') {
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.maxLength = '1';
+                        const subscript = document.createElement('div');
+                        subscript.className = 'subscript';
+                        cell.appendChild(input);
+                        cell.appendChild(subscript);
+                    } else {
+                        cell.className += ' black-cell';
+                    }
+                    board.appendChild(cell);
+                }
+            }
+        }
+
+        function checkCrossword() {
+            let isCorrect = true;
+            const cells = document.querySelectorAll('#crossword-board .cell input');
+            cells.forEach(cell => {
+                if (cell.value.trim() === '') {
+                    isCorrect = false;
+                }
+            });
+            alert(isCorrect ? 'Correct!' : 'Try again.');
+        }
+
+        window.onload = generateCrossword;
+    </script>
+</body>
+
+</html>
