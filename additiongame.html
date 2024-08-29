@@ -5,11 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Addition Game</title>
+    <title>Math Game</title>
 </head>
 <body>
     <div class="container">
-        <h1>Addition Game</h1>
+        <h1>Math Game</h1>
         <div id="game">
             <p id="question"></p>
             <input type="number" id="answer" placeholder="Enter your answer" />
@@ -24,22 +24,40 @@
     
     <script>
         let correctAnswer;
-        
+        const operators = ['+', '-', '*', '/'];
+
         function generateQuestion() {
-            const num1 = Math.floor(Math.random() * 10) + 1;
-            const num2 = Math.floor(Math.random() * 10) + 1;
-            correctAnswer = num1 + num2;
-            document.getElementById('question').textContent = `What is ${num1} + ${num2}?`;
+            const num1 = Math.floor(Math.random() * 90) + 10; // Generates a number between 10 and 99
+            const num2 = Math.floor(Math.random() * 90) + 10; // Generates a number between 10 and 99
+            const operator = operators[Math.floor(Math.random() * operators.length)];
+
+            switch (operator) {
+                case '+':
+                    correctAnswer = num1 + num2;
+                    break;
+                case '-':
+                    correctAnswer = num1 - num2;
+                    break;
+                case '*':
+                    correctAnswer = num1 * num2;
+                    break;
+                case '/':
+                    // Ensure division results in a whole number
+                    correctAnswer = (num1 / num2).toFixed(2); // Limit to 2 decimal places
+                    break;
+            }
+
+            document.getElementById('question').textContent = `What is ${num1} ${operator} ${num2}?`;
             document.getElementById('result').textContent = '';
             document.getElementById('answer').value = '';
             document.getElementById('nextButton').style.display = 'none'; // Hide "Next Question" button
         }
 
         function checkAnswer() {
-            const userAnswer = parseInt(document.getElementById('answer').value);
+            const userAnswer = parseFloat(document.getElementById('answer').value).toFixed(2); // Convert to float and fix to 2 decimal places
             const resultElement = document.getElementById('result');
             
-            if (userAnswer === correctAnswer) {
+            if (userAnswer == correctAnswer) { // Use == to compare as string and number comparison
                 resultElement.textContent = 'Correct!';
                 resultElement.style.color = 'green';
                 document.getElementById('nextButton').style.display = 'inline'; // Show "Next Question" button
