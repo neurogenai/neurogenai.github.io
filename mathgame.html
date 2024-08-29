@@ -33,9 +33,14 @@
             let num1, num2, operator;
             let isValidQuestion = false;
 
+            // Dynamically adjust number range based on win streak
+            const difficultyMultiplier = Math.floor(winStreakCount / 5) + 1; // Increases difficulty every 5 correct answers
+            const minNumber = 10 * difficultyMultiplier;
+            const maxNumber = 99 * difficultyMultiplier;
+
             while (!isValidQuestion) {
-                num1 = Math.floor(Math.random() * 90) + 10; // Generates a number between 10 and 99
-                num2 = Math.floor(Math.random() * 90) + 10; // Generates a number between 10 and 99
+                num1 = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber; // Generates a number within the adjusted range
+                num2 = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber; // Generates a number within the adjusted range
                 operator = operators[Math.floor(Math.random() * operators.length)];
 
                 switch (operator) {
@@ -43,7 +48,7 @@
                         correctAnswer = num1 + num2;
                         break;
                     case '-':
-                        // Ensure no negative results to keep within two digits
+                        // Ensure no negative results to keep within the range
                         if (num1 >= num2) {
                             correctAnswer = num1 - num2;
                         } else {
@@ -51,23 +56,23 @@
                         }
                         break;
                     case '*':
-                        // For multiplication, ensure the result is within two digits
-                        if (num1 * num2 <= 99) {
+                        // For multiplication, ensure the result is manageable
+                        if (num1 * num2 <= maxNumber) {
                             correctAnswer = num1 * num2;
                         } else {
-                            continue; // Skip to the next iteration if result exceeds two digits
+                            continue; // Skip to the next iteration if result exceeds the range
                         }
                         break;
                     case '/':
-                        // Ensure division results in a whole number
-                        num2 = Math.floor(Math.random() * 9) + 1; // num2 is between 1 and 9 to avoid division by zero and keep results manageable
-                        num1 = num2 * Math.floor(Math.random() * 10) + 1; // num1 is a multiple of num2, ensuring a whole number
+                        // Ensure division results in a whole number and both numbers are within the adjusted range
+                        num2 = Math.floor(Math.random() * 9) + 1; // num2 is between 1 and 9 to avoid division by zero
+                        num1 = num2 * Math.floor(Math.random() * 10 * difficultyMultiplier) + 1; // num1 is a multiple of num2
                         correctAnswer = num1 / num2;
                         break;
                 }
 
-                // Check if the result is within the two-digit range for all operations
-                if (Number.isInteger(correctAnswer) && correctAnswer >= -99 && correctAnswer <= 99) {
+                // Check if the result is within the valid range for all operations
+                if (Number.isInteger(correctAnswer) && correctAnswer >= -99 * difficultyMultiplier && correctAnswer <= 99 * difficultyMultiplier) {
                     isValidQuestion = true;
                 }
             }
