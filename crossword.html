@@ -103,6 +103,7 @@
     <button onclick="window.location.href='index.html';">Back to Main Page</button>
 
     <script>
+        // Large word list for variety
         const wordList = [
             { word: "APPLE", hint: "A fruit" },
             { word: "BEAR", hint: "A large mammal" },
@@ -132,13 +133,16 @@
             { word: "ZEBRA", hint: "A striped horse-like animal" }
         ];
 
+        const MAX_LETTER_SQUARES = 50;
+        const MIN_BLANK_SQUARES = 20;
+
         let grid = [];
         let placedWords = [];
         let placedWordSet = new Set();  // Set to track placed words
 
         function calculateGridSize() {
-            let totalLetters = wordList.reduce((sum, wordObj) => sum + wordObj.word.length, 0);
-            let gridSize = Math.ceil(Math.sqrt(totalLetters * 2));  // Estimate grid size
+            let totalSquares = MAX_LETTER_SQUARES + MIN_BLANK_SQUARES;
+            let gridSize = Math.ceil(Math.sqrt(totalSquares));
             return gridSize;
         }
 
@@ -152,14 +156,19 @@
             document.getElementById('down-clues').innerHTML = '';
 
             const shuffledWordList = [...wordList].sort(() => 0.5 - Math.random());
+            let lettersPlaced = 0;
 
             let startRow = Math.floor(grid.length / 2);
             let startCol = Math.floor((grid[0].length - shuffledWordList[0].word.length) / 2);
-            placeWord(shuffledWordList[0].word, startRow, startCol, 'horizontal');
+            if (lettersPlaced + shuffledWordList[0].word.length <= MAX_LETTER_SQUARES) {
+                placeWord(shuffledWordList[0].word, startRow, startCol, 'horizontal');
+                lettersPlaced += shuffledWordList[0].word.length;
+            }
 
             for (let i = 1; i < shuffledWordList.length; i++) {
-                if (!placedWordSet.has(shuffledWordList[i].word)) {
+                if (!placedWordSet.has(shuffledWordList[i].word) && lettersPlaced + shuffledWordList[i].word.length <= MAX_LETTER_SQUARES) {
                     placeWordConnected(shuffledWordList[i].word);
+                    lettersPlaced += shuffledWordList[i].word.length;
                 }
             }
 
@@ -248,6 +257,15 @@
                     board.appendChild(cell);
                 }
             });
+
+            // Add blank cells to ensure 20 minimum blank spaces
+            let blankSquares = grid.flat().filter(cell => cell === ' ').length;
+            while (blankSquares < MIN_BLANK_SQUARES) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'black-cell';
+                board.appendChild(emptyCell);
+                blankSquares++;
+            }
         }
 
         function generateClues() {
