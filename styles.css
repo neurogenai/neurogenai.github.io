@@ -31,7 +31,6 @@ button {
     color: white;
     border: none;
     border-radius: 5px;
-    margin-top: 5px;
 }
 
 button:hover {
@@ -39,7 +38,7 @@ button:hover {
 }
 
 .references-section {
-    margin-top: 20px; /* Add spacing above the references button */
+    margin-top: 40px; /* Add spacing above the references button */
 }
 
 footer {
