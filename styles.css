@@ -19,7 +19,7 @@ main {
 }
 
 .game-buttons {
-    margin-bottom: 40px; /* Add spacing below game buttons */
+    margin-bottom: 40px;
 }
 
 button {
@@ -38,7 +38,8 @@ button:hover {
 }
 
 .references-section {
-    margin-top: 400px; /* Add spacing above the references button */
+    margin-top: 400px; 
+    margin-bottom: 20px;
 }
 
 footer {
