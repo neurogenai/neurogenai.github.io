@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Crossword Game</title>
+    <title>15-Word Crossword Game</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
@@ -28,6 +28,7 @@
             height: 40px;
             border: 1px solid #000;
             position: relative;
+            background-color: #fff;
         }
 
         .cell input {
@@ -45,6 +46,7 @@
             top: 2px;
             left: 2px;
             font-size: 10px;
+            color: #000;
         }
 
         .black-cell {
@@ -74,7 +76,7 @@
 </head>
 
 <body>
-    <h1>Crossword Game</h1>
+    <h1>15-Word Crossword Game</h1>
     <div id="crossword-board"></div>
     <div class="clues">
         <h2>Clues</h2>
@@ -83,17 +85,26 @@
         <h3>Down</h3>
         <ul id="down-clues"></ul>
     </div>
-    <button onclick="generateCrossword()">Regenerate Puzzle</button>
     <button onclick="checkCrossword()">Check Solution</button>
+    <button onclick="window.location.href='index.html';">Back to Main Page</button>
 
     <script>
-        const wordList = [
-            { word: "APPLE", hint: "A fruit" },
-            { word: "BEAR", hint: "A large mammal" },
-            { word: "CAT", hint: "A common pet" },
-            { word: "DOG", hint: "Man's best friend" },
-            { word: "FISH", hint: "Lives in water" },
-            { word: "HORSE", hint: "Ridden by cowboys" }
+        const words = [
+            { word: "APPLE", row: 0, col: 0, direction: "across", clue: "A fruit" },
+            { word: "DOG", row: 1, col: 3, direction: "down", clue: "Man's best friend" },
+            { word: "BEAR", row: 1, col: 6, direction: "across", clue: "A large mammal" },
+            { word: "CAT", row: 2, col: 2, direction: "across", clue: "A common pet" },
+            { word: "FISH", row: 4, col: 0, direction: "across", clue: "Lives in water" },
+            { word: "EAGLE", row: 4, col: 3, direction: "down", clue: "A bird of prey" },
+            { word: "HORSE", row: 5, col: 5, direction: "across", clue: "Ridden by cowboys" },
+            { word: "MOUSE", row: 7, col: 0, direction: "across", clue: "A small rodent" },
+            { word: "SNAKE", row: 2, col: 7, direction: "down", clue: "A legless reptile" },
+            { word: "LION", row: 7, col: 6, direction: "down", clue: "King of the jungle" },
+            { word: "YACHT", row: 8, col: 2, direction: "across", clue: "A large boat" },
+            { word: "NINJA", row: 9, col: 0, direction: "across", clue: "A stealthy warrior" },
+            { word: "JOKER", row: 3, col: 8, direction: "down", clue: "A wild card" },
+            { word: "PYTHON", row: 6, col: 2, direction: "down", clue: "A large snake or a programming language" },
+            { word: "UMBRELLA", row: 0, col: 8, direction: "down", clue: "Used to protect from rain" }
         ];
 
         function generateCrossword() {
@@ -102,13 +113,10 @@
             document.getElementById('crossword-board').innerHTML = '';
             document.getElementById('across-clues').innerHTML = '';
             document.getElementById('down-clues').innerHTML = '';
-            
-            placeWord(grid, wordList[0].word, 1, 1, 'horizontal', 1);
-            placeWord(grid, wordList[1].word, 3, 1, 'vertical', 2);
-            placeWord(grid, wordList[2].word, 5, 3, 'horizontal', 3);
-            placeWord(grid, wordList[3].word, 0, 6, 'vertical', 4);
-            placeWord(grid, wordList[4].word, 7, 7, 'horizontal', 5);
-            placeWord(grid, wordList[5].word, 8, 2, 'vertical', 6);
+
+            words.forEach((wordObj, index) => {
+                placeWord(grid, wordObj.word, wordObj.row, wordObj.col, wordObj.direction, index + 1);
+            });
 
             renderGrid(grid);
             generateClues();
@@ -116,7 +124,7 @@
 
         function placeWord(grid, word, row, col, direction, index) {
             for (let i = 0; i < word.length; i++) {
-                if (direction === 'horizontal') {
+                if (direction === 'across') {
                     grid[row][col + i] = word[i];
                 } else {
                     grid[row + i][col] = word[i];
@@ -126,10 +134,10 @@
         }
 
         function addClue(index, word, direction) {
-            const clueText = `${index}. ${wordList.find(w => w.word === word).hint} (${word.length} letters)`;
+            const clueText = `${index}. ${words.find(w => w.word === word).clue} (${word.length} letters)`;
             const clueItem = document.createElement('li');
             clueItem.textContent = clueText;
-            if (direction === 'horizontal') {
+            if (direction === 'across') {
                 document.getElementById('across-clues').appendChild(clueItem);
             } else {
                 document.getElementById('down-clues').appendChild(clueItem);
