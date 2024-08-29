@@ -40,26 +40,31 @@
                         correctAnswer = num1 + num2;
                         break;
                     case '-':
-                        correctAnswer = num1 - num2;
+                        // Ensure no negative results to keep within two digits
+                        if (num1 >= num2) {
+                            correctAnswer = num1 - num2;
+                        } else {
+                            continue; // Skip to the next iteration if result would be negative
+                        }
                         break;
                     case '*':
                         // For multiplication, ensure the result is within two digits
                         if (num1 * num2 <= 99) {
                             correctAnswer = num1 * num2;
                         } else {
-                            continue; // Skip to next iteration if result exceeds two digits
+                            continue; // Skip to the next iteration if result exceeds two digits
                         }
                         break;
                     case '/':
-                        // Ensure division results in a whole number and both numbers are two-digit
-                        num2 = Math.floor(Math.random() * 90) + 10; // Re-calculate num2 for valid division
-                        num1 = num2 * Math.floor(Math.random() * 9) + 1; // num1 will be a multiple of num2
+                        // Ensure division results in a whole number
+                        num2 = Math.floor(Math.random() * 9) + 1; // num2 is between 1 and 9 to avoid division by zero and keep results manageable
+                        num1 = num2 * Math.floor(Math.random() * 10) + 1; // num1 is a multiple of num2, ensuring a whole number
                         correctAnswer = num1 / num2;
                         break;
                 }
 
                 // Check if the result is within the two-digit range for all operations
-                if (correctAnswer >= -99 && correctAnswer <= 99) {
+                if (Number.isInteger(correctAnswer) && correctAnswer >= -99 && correctAnswer <= 99) {
                     isValidQuestion = true;
                 }
             }
