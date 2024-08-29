@@ -1,4 +1,4 @@
-/* Main Page and Crossword Styles */
+/* Main Page Styles */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -18,9 +18,13 @@ main {
     margin: 20px;
 }
 
+.game-buttons {
+    margin-bottom: 40px; /* Add spacing below game buttons */
+}
+
 button {
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 15px 30px;
+    font-size: 18px;
     margin: 10px;
     cursor: pointer;
     background-color: #4CAF50;
@@ -33,6 +37,10 @@ button:hover {
     background-color: #45a049;
 }
 
+.references-section {
+    margin-top: 20px; /* Add spacing above the references button */
+}
+
 footer {
     background-color: #333;
     color: white;
@@ -41,5 +49,3 @@ footer {
     width: 100%;
     bottom: 0;
 }
-
-
