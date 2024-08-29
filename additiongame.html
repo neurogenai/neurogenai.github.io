@@ -15,9 +15,11 @@
             <input type="number" id="answer" placeholder="Enter your answer" />
             <button onclick="checkAnswer()">Check Answer</button>
             <p id="result"></p>
-            <button onclick="generateQuestion()">Next Question</button>
-            <button onclick="location.href='index.html'">Back to Main Page</button>
+            <!-- "Next Question" button, initially hidden -->
+            <button id="nextButton" onclick="generateQuestion()" style="display: none; margin-top: 10px;">Next Question</button>
         </div>
+        <!-- Back Button to navigate to the main page -->
+        <button onclick="location.href='index.html'" style="margin-top: 20px;">Back to Main Page</button>
     </div>
     
     <script>
@@ -30,6 +32,7 @@
             document.getElementById('question').textContent = `What is ${num1} + ${num2}?`;
             document.getElementById('result').textContent = '';
             document.getElementById('answer').value = '';
+            document.getElementById('nextButton').style.display = 'none'; // Hide "Next Question" button
         }
 
         function checkAnswer() {
@@ -39,9 +42,11 @@
             if (userAnswer === correctAnswer) {
                 resultElement.textContent = 'Correct!';
                 resultElement.style.color = 'green';
+                document.getElementById('nextButton').style.display = 'inline'; // Show "Next Question" button
             } else {
                 resultElement.textContent = `Wrong! The correct answer was ${correctAnswer}.`;
                 resultElement.style.color = 'red';
+                document.getElementById('nextButton').style.display = 'none'; // Ensure button stays hidden if incorrect
             }
         }
 
