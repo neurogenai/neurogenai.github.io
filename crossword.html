@@ -1,184 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>15-Word Crossword Game</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
-        }
-
-        #crossword-board {
-            display: grid;
-            grid-template-columns: repeat(10, 40px);
-            gap: 2px;
-            margin: 20px auto;
-            border: 2px solid #000;
-        }
-
-        .cell {
-            width: 40px;
-            height: 40px;
-            border: 1px solid #000;
-            position: relative;
-            background-color: #fff;
-        }
-
-        .cell input {
-            width: 100%;
-            height: 100%;
-            border: none;
-            text-align: center;
-            font-size: 18px;
-            background-color: transparent;
-            outline: none;
-        }
-
-        .subscript {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            font-size: 10px;
-            color: #000;
-        }
-
-        .black-cell {
-            background-color: #000;
-        }
-
-        .clues {
-            text-align: left;
-            margin: 20px auto;
-            width: 200px;
-        }
-
-        button {
-            padding: 10px 20px;
-            margin: 10px;
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <title>Addition Game</title>
 </head>
-
 <body>
-    <h1>15-Word Crossword Game</h1>
-    <div id="crossword-board"></div>
-    <div class="clues">
-        <h2>Clues</h2>
-        <h3>Across</h3>
-        <ul id="across-clues"></ul>
-        <h3>Down</h3>
-        <ul id="down-clues"></ul>
+    <div class="container">
+        <h1>Addition Game</h1>
+        <div id="game">
+            <p id="question"></p>
+            <input type="number" id="answer" placeholder="Enter your answer" />
+            <button onclick="checkAnswer()">Check Answer</button>
+            <p id="result"></p>
+            <button onclick="generateQuestion()">Next Question</button>
+        </div>
     </div>
-    <button onclick="checkCrossword()">Check Solution</button>
-    <button onclick="window.location.href='index.html';">Back to Main Page</button>
-
+    
     <script>
-        const words = [
-            { word: "APPLE", row: 0, col: 0, direction: "across", clue: "A fruit" },
-            { word: "DOG", row: 1, col: 3, direction: "down", clue: "Man's best friend" },
-            { word: "BEAR", row: 1, col: 6, direction: "across", clue: "A large mammal" },
-            { word: "CAT", row: 2, col: 2, direction: "across", clue: "A common pet" },
-            { word: "FISH", row: 4, col: 0, direction: "across", clue: "Lives in water" },
-            { word: "EAGLE", row: 4, col: 3, direction: "down", clue: "A bird of prey" },
-            { word: "HORSE", row: 5, col: 5, direction: "across", clue: "Ridden by cowboys" },
-            { word: "MOUSE", row: 7, col: 0, direction: "across", clue: "A small rodent" },
-            { word: "SNAKE", row: 2, col: 7, direction: "down", clue: "A legless reptile" },
-            { word: "LION", row: 7, col: 6, direction: "down", clue: "King of the jungle" },
-            { word: "YACHT", row: 8, col: 2, direction: "across", clue: "A large boat" },
-            { word: "NINJA", row: 9, col: 0, direction: "across", clue: "A stealthy warrior" },
-            { word: "JOKER", row: 3, col: 8, direction: "down", clue: "A wild card" },
-            { word: "PYTHON", row: 6, col: 2, direction: "down", clue: "A large snake or a programming language" },
-            { word: "UMBRELLA", row: 0, col: 8, direction: "down", clue: "Used to protect from rain" }
-        ];
-
-        function generateCrossword() {
-            const gridSize = 10;
-            const grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(' '));
-            document.getElementById('crossword-board').innerHTML = '';
-            document.getElementById('across-clues').innerHTML = '';
-            document.getElementById('down-clues').innerHTML = '';
-
-            words.forEach((wordObj, index) => {
-                placeWord(grid, wordObj.word, wordObj.row, wordObj.col, wordObj.direction, index + 1);
-            });
-
-            renderGrid(grid);
-            generateClues();
+        let correctAnswer;
+        
+        function generateQuestion() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            correctAnswer = num1 + num2;
+            document.getElementById('question').textContent = `What is ${num1} + ${num2}?`;
+            document.getElementById('result').textContent = '';
+            document.getElementById('answer').value = '';
         }
 
-        function placeWord(grid, word, row, col, direction, index) {
-            for (let i = 0; i < word.length; i++) {
-                if (direction === 'across') {
-                    grid[row][col + i] = word[i];
-                } else {
-                    grid[row + i][col] = word[i];
-                }
-            }
-            addClue(index, word, direction);
-        }
-
-        function addClue(index, word, direction) {
-            const clueText = `${index}. ${words.find(w => w.word === word).clue} (${word.length} letters)`;
-            const clueItem = document.createElement('li');
-            clueItem.textContent = clueText;
-            if (direction === 'across') {
-                document.getElementById('across-clues').appendChild(clueItem);
+        function checkAnswer() {
+            const userAnswer = parseInt(document.getElementById('answer').value);
+            const resultElement = document.getElementById('result');
+            
+            if (userAnswer === correctAnswer) {
+                resultElement.textContent = 'Correct!';
+                resultElement.style.color = 'green';
             } else {
-                document.getElementById('down-clues').appendChild(clueItem);
+                resultElement.textContent = `Wrong! The correct answer was ${correctAnswer}.`;
+                resultElement.style.color = 'red';
             }
         }
 
-        function renderGrid(grid) {
-            const board = document.getElementById('crossword-board');
-            for (let i = 0; i < grid.length; i++) {
-                for (let j = 0; j < grid[i].length; j++) {
-                    const cell = document.createElement('div');
-                    cell.className = 'cell';
-                    if (grid[i][j] !== ' ') {
-                        const input = document.createElement('input');
-                        input.type = 'text';
-                        input.maxLength = '1';
-                        const subscript = document.createElement('div');
-                        subscript.className = 'subscript';
-                        cell.appendChild(input);
-                        cell.appendChild(subscript);
-                    } else {
-                        cell.className += ' black-cell';
-                    }
-                    board.appendChild(cell);
-                }
-            }
-        }
-
-        function checkCrossword() {
-            let isCorrect = true;
-            const cells = document.querySelectorAll('#crossword-board .cell input');
-            cells.forEach(cell => {
-                if (cell.value.trim() === '') {
-                    isCorrect = false;
-                }
-            });
-            alert(isCorrect ? 'Correct!' : 'Try again.');
-        }
-
-        window.onload = generateCrossword;
+        window.onload = generateQuestion;
     </script>
 </body>
-
 </html>
