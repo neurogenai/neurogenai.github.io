@@ -1,26 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page - Game Hub</title>
-    <link rel="stylesheet" href="main-styles.css"> <!-- Link to a new CSS file -->
+    <link rel="stylesheet" href="main-styles.css">
 </head>
+
 <body>
     <header>
-        <h1>Welcome to the Neurogenesis Game Hub!</h1>
-        <p>Explore various fun and interactive games that require some form of cognitive load, to form new neurons. Click a button below to start playing!</p>
+        <h1>Welcome to the Game Hub!</h1>
+        <p>Explore a variety of fun and interactive games. Click a button below to start playing!</p>
     </header>
 
     <main>
-        <button onclick="window.location.href='sudoku.html';">Play Sudoku</button>
-        <button onclick="window.location.href='additiongame.html';">Play Crossword</button>
-        <button onclick="window.location.href='references.html';">References</button>
-        <!-- Add more buttons for other games here -->
+        <!-- Game buttons section -->
+        <div class="game-buttons">
+            <button onclick="window.location.href='sudoku.html';">Play Sudoku</button>
+            <button onclick="window.location.href='crossword.html';">Play Crossword</button>
+        </div>
+
+        <!-- Add some spacing between game buttons and references button -->
+        <div class="references-section">
+            <button onclick="window.location.href='references.html';">References</button>
+        </div>
     </main>
 
     <footer>
         <p>© 2024 Game Hub. All rights reserved.</p>
     </footer>
 </body>
+
 </html>
