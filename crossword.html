@@ -99,6 +99,7 @@
     <button onclick="window.location.href='index.html';">Back to Main Page</button>
 
     <script>
+        // Large word list for variety
         const wordList = [
             { word: "APPLE", hint: "A fruit" },
             { word: "BEAR", hint: "A large mammal" },
@@ -109,7 +110,23 @@
             { word: "GRAPE", hint: "A small fruit" },
             { word: "HORSE", hint: "Ridden by cowboys" },
             { word: "IGLOO", hint: "An ice house" },
-            { word: "JOKER", hint: "A wild card in a deck" }
+            { word: "JOKER", hint: "A wild card in a deck" },
+            { word: "KING", hint: "A male monarch" },
+            { word: "LION", hint: "King of the jungle" },
+            { word: "MOUSE", hint: "A small rodent" },
+            { word: "NINJA", hint: "A stealthy warrior" },
+            { word: "ORANGE", hint: "A citrus fruit" },
+            { word: "PYTHON", hint: "A large snake or a programming language" },
+            { word: "QUEEN", hint: "A female monarch" },
+            { word: "RAVEN", hint: "A black bird" },
+            { word: "SNAKE", hint: "A legless reptile" },
+            { word: "TIGER", hint: "A large striped cat" },
+            { word: "UMBRELLA", hint: "Used to protect from rain" },
+            { word: "VAMPIRE", hint: "A mythical blood-sucker" },
+            { word: "WHALE", hint: "A large sea mammal" },
+            { word: "XYLOPHONE", hint: "A musical instrument" },
+            { word: "YACHT", hint: "A large boat" },
+            { word: "ZEBRA", hint: "A striped horse-like animal" }
         ];
 
         let grid = [];
@@ -133,15 +150,18 @@
             document.getElementById('across-clues').innerHTML = '';
             document.getElementById('down-clues').innerHTML = '';
 
+            // Randomize word list for variety
+            const shuffledWordList = [...wordList].sort(() => 0.5 - Math.random());
+
             // Place the first word in the center
             let startRow = Math.floor(grid.length / 2);
-            let startCol = Math.floor((grid[0].length - wordList[0].word.length) / 2);
-            placeWord(wordList[0].word, startRow, startCol, 'horizontal');
+            let startCol = Math.floor((grid[0].length - shuffledWordList[0].word.length) / 2);
+            placeWord(shuffledWordList[0].word, startRow, startCol, 'horizontal');
 
             // Place the rest of the words ensuring they connect properly and don't repeat
-            for (let i = 1; i < wordList.length; i++) {
-                if (!placedWordSet.has(wordList[i].word)) {
-                    placeWordConnected(wordList[i].word);
+            for (let i = 1; i < shuffledWordList.length; i++) {
+                if (!placedWordSet.has(shuffledWordList[i].word)) {
+                    placeWordConnected(shuffledWordList[i].word);
                 }
             }
 
