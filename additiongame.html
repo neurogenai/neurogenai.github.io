@@ -28,9 +28,9 @@
 
         function generateQuestion() {
             let num1, num2, operator;
-            let isValidAnswer = false;
+            let isValidQuestion = false;
 
-            while (!isValidAnswer) {
+            while (!isValidQuestion) {
                 num1 = Math.floor(Math.random() * 90) + 10; // Generates a number between 10 and 99
                 num2 = Math.floor(Math.random() * 90) + 10; // Generates a number between 10 and 99
                 operator = operators[Math.floor(Math.random() * operators.length)];
@@ -43,18 +43,24 @@
                         correctAnswer = num1 - num2;
                         break;
                     case '*':
-                        correctAnswer = num1 * num2;
+                        // For multiplication, ensure the result is within two digits
+                        if (num1 * num2 <= 99) {
+                            correctAnswer = num1 * num2;
+                        } else {
+                            continue; // Skip to next iteration if result exceeds two digits
+                        }
                         break;
                     case '/':
-                        // Ensure division results in a whole number
-                        num1 = num1 * num2; // Make sure num1 is always divisible by num2
+                        // Ensure division results in a whole number and both numbers are two-digit
+                        num2 = Math.floor(Math.random() * 90) + 10; // Re-calculate num2 for valid division
+                        num1 = num2 * Math.floor(Math.random() * 9) + 1; // num1 will be a multiple of num2
                         correctAnswer = num1 / num2;
                         break;
                 }
 
-                // Check if the answer is within the two-digit range
+                // Check if the result is within the two-digit range for all operations
                 if (correctAnswer >= -99 && correctAnswer <= 99) {
-                    isValidAnswer = true;
+                    isValidQuestion = true;
                 }
             }
 
