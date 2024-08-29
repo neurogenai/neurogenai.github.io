@@ -75,7 +75,7 @@
             document.getElementById('question').textContent = `What is ${num1} ${operator} ${num2}?`;
             document.getElementById('result').textContent = '';
             document.getElementById('answer').value = '';
-            document.getElementById('nextButton').style.display = 'none'; // Hide "Next Question" button
+            document.getElementById('nextButton').style.display = 'none'; // Hide "Next Question" button initially
         }
 
         function checkAnswer() {
@@ -86,16 +86,17 @@
                 resultElement.textContent = 'Correct!';
                 resultElement.style.color = 'green';
                 winStreakCount++; // Increment win streak
-                document.getElementById('nextButton').style.display = 'inline'; // Show "Next Question" button
             } else {
                 resultElement.textContent = `Wrong! The correct answer was ${correctAnswer}.`;
                 resultElement.style.color = 'red';
                 winStreakCount = 0; // Reset win streak
-                document.getElementById('nextButton').style.display = 'none'; // Ensure button stays hidden if incorrect
             }
 
             // Update win streak display
             document.getElementById('winStreak').textContent = `Win Streak: ${winStreakCount}`;
+            
+            // Show "Next Question" button regardless of the answer correctness
+            document.getElementById('nextButton').style.display = 'inline';
         }
 
         window.onload = generateQuestion;
