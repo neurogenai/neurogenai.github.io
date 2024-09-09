@@ -41,11 +41,10 @@ main {
     border-radius: 5px;
 }
 .references-section {
-    margin-bottom: 30px;
-    margin-top: 30px;
+    margin-bottom: 300px;
+    margin-top: 300px;
     padding: 15px 30px;
     font-size: 18px;
-    margin: 10px;
     cursor: pointer;
     background-color: #4CAF50;
     color: white;
