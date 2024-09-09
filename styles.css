@@ -35,6 +35,7 @@ button {
     border-radius: 5px;
     transition: background-color 0.3s ease;
     width: 200px; /* Adjust button width */
+    margin-top: 30px;
 }
 
 button:hover {
