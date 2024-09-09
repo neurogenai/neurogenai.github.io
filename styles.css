@@ -18,8 +18,14 @@ main {
     margin: 20px;
 }
 
-.game-buttons {
-    margin-bottom: 40px;
+.game-button-sudoku {
+    margin-bottom: 10px;
+}
+.game-button-mathgame {
+    margin-bottom: 10px;
+}
+.references-section {
+    margin-bottom: 10px;
 }
 
 button {
