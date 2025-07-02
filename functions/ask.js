@@ -1,4 +1,3 @@
-// functions/ask.js
 import fetch from "node-fetch";
 import fs    from "fs";
 import path  from "path";
@@ -8,26 +7,21 @@ export async function handler(event) {
     "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json"
   };
-
   try {
     const { question } = JSON.parse(event.body || "{}");
-    if (!question) throw new Error("Please send a “question”.");
+    if (!question) throw new Error("Missing `question`.");
 
-    // Load the KB
     const KB = fs.readFileSync(path.resolve("knowledge_base.txt"), "utf-8");
-
-    // Build the prompt
     const prompt = `
 You are NeurogenAI, a cognitive-health assistant.
-Use this KNOWNLEDGE to answer in depth:
+Use the following KNOWLEDGE to answer in depth:
 
 ${KB}
 
 QUESTION: ${question}
     `.trim();
 
-    // Vertex AI / Gemini settings
-    const PROJECT  = process.env.GCP_PROJECT;    // set below
+    const PROJECT  = process.env.GCP_PROJECT;
     const LOCATION = "us-central1";
     const MODEL    = "text-bison-001";
     const KEY      = process.env.GOOGLE_API_KEY;
