@@ -1,1 +1,0 @@
-# neurogenai.github.io
