@@ -13,13 +13,14 @@ export default async function handler(req, res) {
   // 1) Initialize OpenAI
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-  // 2) Initialize Pinecone with explicit controller URL
+  // 2) Initialize Pinecone with explicit controller URL + project name
   const pinecone = new PineconeClient();
   await pinecone.init({
     apiKey: process.env.PINECONE_API_KEY,
-    baseUrl: process.env.PINECONE_BASE_URL
+    baseUrl: process.env.PINECONE_BASE_URL,       // e.g. "https://controller.aped-4627-b74a.pinecone.io"
+    projectName: process.env.PINECONE_PROJECT_NAME // e.g. "neurogenai"
   });
-  const index = pinecone.Index(process.env.PINECONE_INDEX);
+  const index = pinecone.Index(process.env.PINECONE_INDEX); // e.g. "knowledge"
 
   try {
     // 3) Embed the question
@@ -44,7 +45,7 @@ export default async function handler(req, res) {
       })
       .join("\n\n");
 
-    // 6) Chat completion
+    // 6) Call Chat Completion
     const chat = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -59,7 +60,7 @@ export default async function handler(req, res) {
     });
     const answer = chat.choices[0].message.content;
 
-    // 7) Return
+    // 7) Return answer + sources
     return res.status(200).json({
       answer,
       sources: matches.map((m) => m.metadata.source || ""),
