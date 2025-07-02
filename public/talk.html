@@ -32,7 +32,7 @@
       const q = userInput.value.trim(); if (!q) return;
       append('user-msg', q);
       userInput.value = '';
-      const res = await fetch('/.netlify/functions/ask', {
+      const res = await fetch('https://<your-netlify-domain>/.netlify/functions/ask', {
         method: 'POST',
         body: JSON.stringify({ question: q })
       });
