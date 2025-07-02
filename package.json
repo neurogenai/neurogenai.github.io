@@ -2,7 +2,7 @@
   "name": "neurogenai",
   "version": "1.0.0",
   "dependencies": {
-    "langchain": "^0.3.0",
+    "langchain": "0.0.173",
     "openai": "^4.0.0",
     "@pinecone-database/pinecone": "^1.0.0"
   }
