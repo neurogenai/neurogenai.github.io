@@ -1,16 +1,17 @@
-import { PineconeClient }   from "@pinecone-database/pinecone";
-import { OpenAIEmbeddings } from "langchain/embeddings/openai";
-import { PineconeStore }    from "langchain/vectorstores/pinecone";
-import { ChatOpenAI }       from "langchain/chat_models/openai";
-import { RetrievalQAChain } from "langchain/chains";
+import OpenAI from "openai";
+import { PineconeClient } from "@pinecone-database/pinecone";
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).end();
-
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
   const { question } = req.body;
-  if (!question) return res.status(400).json({ error: "Missing question" });
+  if (!question) {
+    return res.status(400).json({ error: "Missing question" });
+  }
 
-  // 1) Connect to Pinecone
+  // 1) Initialize clients
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const pinecone = new PineconeClient();
   await pinecone.init({
     apiKey: process.env.PINECONE_API_KEY,
@@ -18,28 +19,52 @@ export default async function handler(req, res) {
   });
   const index = pinecone.Index(process.env.PINECONE_INDEX);
 
-  // 2) Build vector store
-  const vectorStore = await PineconeStore.fromExistingIndex(
-    new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY }),
-    { pineconeIndex: index, textKey: "text" }
-  );
-
-  // 3) Instantiate LLM & RAG chain
-  const model = new ChatOpenAI({
-    temperature: 0.2,
-    openAIApiKey: process.env.OPENAI_API_KEY
-  });
-  const chain = RetrievalQAChain.fromLLM(model, vectorStore.asRetriever(3));
-
-  // 4) Query + respond
   try {
-    const result = await chain.call({ query: question });
-    res.status(200).json({
-      answer: result.text,
-      sources: result.sourceDocuments.map(doc => doc.metadata.source)
+    // 2) Embed the question
+    const embedRes = await openai.embeddings.create({
+      model: "text-embedding-3-small",
+      input: question,
     });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: e.message });
+    const vector = embedRes.data[0].embedding;
+
+    // 3) Query Pinecone for top-3 documents
+    const queryResponse = await index.query({
+      queryRequest: {
+        vector,
+        topK: 3,
+        includeMetadata: true,
+      },
+    });
+    const docs = queryResponse.matches || [];
+
+    // 4) Build the RAG context
+    const context = docs
+      .map(
+        (m, i) =>
+          `Source ${i + 1} (${m.metadata.source}):\n${m.metadata.text}`
+      )
+      .join("\n\n");
+
+    // 5) Run the Chat Completion
+    const chatRes = await openai.chat.completions.create({
+      model: "gpt-4o-mini",          // or another chat model
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a cognitive health assistant. Use the context to answer the user’s question:\n\n" +
+            context,
+        },
+        { role: "user", content: question },
+      ],
+    });
+    const answer = chatRes.choices[0].message.content;
+
+    // 6) Return answer + sources
+    const sources = docs.map((m) => m.metadata.source);
+    return res.status(200).json({ answer, sources });
+  } catch (err) {
+    console.error("RAG Error:", err);
+    return res.status(500).json({ error: err.message });
   }
 }
