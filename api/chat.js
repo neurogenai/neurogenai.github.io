@@ -1,5 +1,3 @@
-// api/chat.js
-
 import OpenAI from "openai";
 import { PineconeClient } from "@pinecone-database/pinecone";
 
