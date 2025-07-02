@@ -4,6 +4,11 @@ import { OpenAIEmbeddings }    from "langchain/embeddings/openai";
 import { PineconeStore }       from "langchain/vectorstores/pinecone";
 import { ChatOpenAI }          from "langchain/chat_models/openai";
 import { RetrievalQAChain }    from "langchain/chains";
+console.log("== /api/chat invoked ==");
+console.log("OPENAI_API_KEY:", !!process.env.OPENAI_API_KEY);
+console.log("PINECONE_API_KEY:", !!process.env.PINECONE_API_KEY);
+console.log("PINECONE_ENV:", process.env.PINECONE_ENV);
+console.log("PINECONE_INDEX:", process.env.PINECONE_INDEX);
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
