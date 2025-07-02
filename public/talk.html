@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Talk to NeurogenAI</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="chat-page">
+  <div class="chat-container">
+    <header><h1>Talk to NeurogenAI</h1></header>
+    <div id="chat-window"></div>
+    <div class="input-area">
+      <input id="user-input" placeholder="Type your question…" />
+      <button id="send-btn">Send</button>
+    </div>
+    <button onclick="location.href='index.html'">← Back</button>
+  </div>
+  <script>
+    const chatWindow = document.getElementById('chat-window');
+    const userInput  = document.getElementById('user-input');
+    const sendBtn    = document.getElementById('send-btn');
+
+    function append(cls, txt) {
+      const d = document.createElement('div');
+      d.className = cls; d.textContent = txt;
+      chatWindow.appendChild(d);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    async function send() {
+      const q = userInput.value.trim(); if (!q) return;
+      append('user-msg', q);
+      userInput.value = '';
+      const res = await fetch('https://<your-netlify-domain>/.netlify/functions/ask', {
+        method: 'POST',
+        body: JSON.stringify({ question: q })
+      });
+      const { answer } = await res.json();
+      append('bot-msg', answer);
+    }
+
+    sendBtn.onclick = send;
+    userInput.addEventListener('keydown', e => { if (e.key==='Enter') send(); });
+  </script>
+</body>
+</html>
