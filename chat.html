@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>NeuroGenAI Chat</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    #log { border:1px solid #ccc; padding:1em; height:300px; overflow-y:auto; }
+    .user{ text-align:right; color:navy; margin:.5em 0; }
+    .bot { text-align:left;  color:darkgreen; margin:.5em 0; }
+    form { display:flex; gap:.5em; margin-top:1em; }
+    input { flex:1; padding:.5em; }
+  </style>
+</head>
+<body>
+  <header><h1>NeuroGenAI Assistant</h1></header>
+  <main>
+    <div id="log"></div>
+    <form id="chatForm">
+      <input id="prompt" type="text" placeholder="Ask about brain health…" required />
+      <button type="submit">Send</button>
+    </form>
+  </main>
+  <script>
+    const log = document.getElementById("log");
+    document.getElementById("chatForm").onsubmit = async e => {
+      e.preventDefault();
+      const q = prompt.value.trim();
+      if (!q) return;
+      addLine("user", q);
+      prompt.value = "";
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type":"application/json" },
+          body: JSON.stringify({ question: q })
+        });
+        const { answer, sources } = await res.json();
+        addLine("bot", answer + "\n\nSources: " + sources.join(", "));
+      } catch(err) {
+        addLine("bot", "Error: " + err.message);
+      }
+    };
+    function addLine(who, text) {
+      const p = document.createElement("p");
+      p.className = who;
+      p.textContent = text;
+      log.appendChild(p);
+      log.scrollTop = log.scrollHeight;
+    }
+  </script>
+</body>
+</html>
