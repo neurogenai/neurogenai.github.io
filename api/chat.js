@@ -15,13 +15,11 @@ export default async function handler(req, res) {
   // 1) Initialize OpenAI
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-  // 2) Initialize Pinecone (auto-discovers projectName)
+  // 2) Initialize Pinecone with explicit controller URL
   const pinecone = new PineconeClient();
   await pinecone.init({
     apiKey: process.env.PINECONE_API_KEY,
-    environment: process.env.PINECONE_ENV, // must be exact (e.g. "us-east1-gcp")
-    // If you still hit fetch errors, you can un-comment this and override the URL:
-    // baseUrl: `https://controller.${process.env.PINECONE_ENV}.pinecone.io`,
+    baseUrl: process.env.PINECONE_BASE_URL
   });
   const index = pinecone.Index(process.env.PINECONE_INDEX);
 
@@ -37,9 +35,9 @@ export default async function handler(req, res) {
     const queryRes = await index.query({
       queryRequest: { vector, topK: 3, includeMetadata: true },
     });
-    const matches = queryRes.matches ?? [];
+    const matches = queryRes.matches || [];
 
-    // 5) Build context
+    // 5) Build RAG context
     const context = matches
       .map((m, i) => {
         const src = m.metadata.source || `doc${i+1}`;
@@ -48,23 +46,25 @@ export default async function handler(req, res) {
       })
       .join("\n\n");
 
-    // 6) Ask GPT
+    // 6) Chat completion
     const chat = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content:
+        {
+          role: "system",
+          content:
             "You are a cognitive health assistant. Use the following context:\n\n" +
-            context
+            context,
         },
         { role: "user", content: question },
       ],
     });
     const answer = chat.choices[0].message.content;
 
-    // 7) Return result
+    // 7) Return
     return res.status(200).json({
       answer,
-      sources: matches.map(m => m.metadata.source || ""),
+      sources: matches.map((m) => m.metadata.source || ""),
     });
   } catch (err) {
     console.error("RAG Error:", err);
