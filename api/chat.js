@@ -1,9 +1,8 @@
 // api/chat.js
-import { PineconeClient }      from "@pinecone-database/pinecone";
-import { OpenAIEmbeddings }    from "langchain/embeddings/openai";
-import { PineconeStore }       from "langchain/vectorstores/pinecone";
-import { ChatOpenAI }          from "langchain/chat_models/openai";
-import { RetrievalQAChain }    from "langchain/chains";
+import { OpenAIEmbeddings }    from "langchain/embeddings/openai.js";
+import { PineconeStore }       from "langchain/vectorstores/pinecone.js";
+import { ChatOpenAI }          from "langchain/chat_models/openai.js";
+import { RetrievalQAChain }    from "langchain/chains/retrieval_qa.js";
 console.log("== /api/chat invoked ==");
 console.log("OPENAI_API_KEY:", !!process.env.OPENAI_API_KEY);
 console.log("PINECONE_API_KEY:", !!process.env.PINECONE_API_KEY);
