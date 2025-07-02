@@ -1,13 +1,8 @@
-// api/chat.js
-import { OpenAIEmbeddings }    from "langchain/embeddings/openai.js";
-import { PineconeStore }       from "langchain/vectorstores/pinecone.js";
-import { ChatOpenAI }          from "langchain/chat_models/openai.js";
-import { RetrievalQAChain }    from "langchain/chains/retrieval_qa.js";
-console.log("== /api/chat invoked ==");
-console.log("OPENAI_API_KEY:", !!process.env.OPENAI_API_KEY);
-console.log("PINECONE_API_KEY:", !!process.env.PINECONE_API_KEY);
-console.log("PINECONE_ENV:", process.env.PINECONE_ENV);
-console.log("PINECONE_INDEX:", process.env.PINECONE_INDEX);
+import { PineconeClient }   from "@pinecone-database/pinecone";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { PineconeStore }    from "langchain/vectorstores/pinecone";
+import { ChatOpenAI }       from "langchain/chat_models/openai";
+import { RetrievalQAChain } from "langchain/chains";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
@@ -41,7 +36,7 @@ export default async function handler(req, res) {
     const result = await chain.call({ query: question });
     res.status(200).json({
       answer: result.text,
-      sources: result.sourceDocuments.map(d => d.metadata.source)
+      sources: result.sourceDocuments.map(doc => doc.metadata.source)
     });
   } catch (e) {
     console.error(e);
