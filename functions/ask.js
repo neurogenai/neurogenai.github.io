@@ -1,40 +1,58 @@
 // functions/ask.js
-import { Configuration, OpenAIApi } from "openai";
-import fs from "fs";
-import path from "path";
-
-const KB = fs.readFileSync(path.resolve("knowledge_base.txt"), "utf-8");
-const config = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY
-});
-const openai = new OpenAIApi(config);
+import fetch from "node-fetch";
+import fs    from "fs";
+import path  from "path";
 
 export async function handler(event) {
-  try {
-    const { question } = JSON.parse(event.body);
-    if (!question) throw new Error("No question");
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json"
+  };
 
-    // Build a simple RAG prompt by pasting the entire KB.
-    // (If your KB grows >4k tokens you can split it later.)
+  try {
+    const { question } = JSON.parse(event.body || "{}");
+    if (!question) throw new Error("Please send a “question”.");
+
+    // Load the KB
+    const KB = fs.readFileSync(path.resolve("knowledge_base.txt"), "utf-8");
+
+    // Build the prompt
     const prompt = `
-You are NeurogenAI, an expert cognitive‐health assistant.
-Use the following KNOWLEDGE to answer as fully as possible:
+You are NeurogenAI, a cognitive-health assistant.
+Use this KNOWNLEDGE to answer in depth:
 
 ${KB}
 
 QUESTION: ${question}
     `.trim();
 
-    const chat = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "system", content: prompt }]
-    });
+    // Vertex AI / Gemini settings
+    const PROJECT  = process.env.GCP_PROJECT;    // set below
+    const LOCATION = "us-central1";
+    const MODEL    = "text-bison-001";
+    const KEY      = process.env.GOOGLE_API_KEY;
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ answer: chat.data.choices[0].message.content })
-    };
-  } catch (err) {
-    return { statusCode: 500, body: String(err) };
+    const url = `https://vertexai.googleapis.com/v1/projects/${PROJECT}`
+              + `/locations/${LOCATION}/publishers/google/models/${MODEL}`
+              + `:generateText?key=${KEY}`;
+
+    const resp = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        prompt: { text: prompt },
+        temperature: 0.2,
+        maxOutputTokens: 512
+      })
+    });
+    const json = await resp.json();
+    if (json.error) throw new Error(json.error.message);
+
+    const answer = (json.candidates?.[0]?.generateText || "").trim()
+                 || "I’m sorry, I couldn’t generate an answer.";
+
+    return { statusCode: 200, headers, body: JSON.stringify({ answer }) };
+  } catch (e) {
+    return { statusCode: 500, headers, body: JSON.stringify({ error: e.message }) };
   }
 }
